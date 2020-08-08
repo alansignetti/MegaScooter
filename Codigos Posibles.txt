@@ -1,1 +1,5 @@
+- COMO PROGRAMAR LOS SPRITES: https://www.youtube.com/watch?v=h5hW3ynHvhM&t=278s
 
+- COMO HACER SALTAR A LA MOTO: https://www.youtube.com/watch?v=ddxSjCXhN9g
+
+- CURSO DE PYGAME: https://www.youtube.com/watch?v=xtk5lR150fg&list=PLpOqH6AE0tNherBf6bzGiDM1uIy_E0WJH&index=2
