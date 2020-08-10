@@ -6,6 +6,8 @@
 
 - COMO HACER VARIOS MAPAS DISTINTOS Y CAMBIARLOS: https://www.youtube.com/watch?v=AZysxbZgjZM&list=PLh7JzoyIyU4IoslNDwae2KSgCyCtsw1ka&index=26
 
+- CONCEPTOS BASICOS DE PYGAME CON EJEMPLOS DE CODIGO: http://programarcadegames.com/index.php?lang=es  
+
 - CURSO DE PYGAMES: 
 
    Codigo facilito curso: https://www.youtube.com/watch?v=xtk5lR150fg&list=PLpOqH6AE0tNherBf6bzGiDM1uIy_E0WJH&index=2
