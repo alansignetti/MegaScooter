@@ -2,4 +2,11 @@
 
 - COMO HACER SALTAR A LA MOTO: https://www.youtube.com/watch?v=ddxSjCXhN9g
 
-- CURSO DE PYGAME: https://www.youtube.com/watch?v=xtk5lR150fg&list=PLpOqH6AE0tNherBf6bzGiDM1uIy_E0WJH&index=2
+- COMO CONSTRUIR UN MAPA: https://www.youtube.com/watch?v=42HL59zlLwY&list=PLh7JzoyIyU4IoslNDwae2KSgCyCtsw1ka&index=23
+
+- COMO HACER VARIOS MAPAS DISTINTOS Y CAMBIARLOS: https://www.youtube.com/watch?v=AZysxbZgjZM&list=PLh7JzoyIyU4IoslNDwae2KSgCyCtsw1ka&index=26
+
+- CURSO DE PYGAMES: 
+
+   Codigo facilito curso: https://www.youtube.com/watch?v=xtk5lR150fg&list=PLpOqH6AE0tNherBf6bzGiDM1uIy_E0WJH&index=2
+   Juego en Pygame desde cero: https://www.youtube.com/playlist?list=PLh7JzoyIyU4IoslNDwae2KSgCyCtsw1ka
