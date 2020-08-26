@@ -1,3 +1,5 @@
+-  REPOSITORIO DEL JUEGO BASE: https://github.com/shivamshekhar/Chrome-T-Rex-Rush/
+
 - COMO PROGRAMAR LOS SPRITES: https://www.youtube.com/watch?v=h5hW3ynHvhM&t=278s
 
 - COMO HACER SALTAR A LA MOTO: https://www.youtube.com/watch?v=ddxSjCXhN9g
