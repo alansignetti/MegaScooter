@@ -6,8 +6,9 @@ from pygame.locals import *
 pygame.init()
 
 # Variable para las ventanas 
-ANCHO = 800 
-LARGO = 600
+ANCHO = 1280
+LARGO = 720
+
 ventana = pygame.display.set_mode((ANCHO, LARGO))
 
 #Colocar el titulo a la ventana
@@ -42,28 +43,34 @@ class Variables_CargaImagenes():
          self.xPiso=0       
          self.xFondo=0
 
+
+
+      #Videos para hacer el fondo y el piso movil https://www.youtube.com/watch?v=Ftln3VrFV6s&list=PLVzwufPir356RMxSsOccc38jmxfxqfBdp&index=4   
+
 def cargar_fondo():
     #-----------------------------Fondo----------------------------------------------
-    fondo= pygame.image.load("Imagenes/fondo2.jpg").convert()
+    fondo= pygame.image.load("Imagenes/fondo22.jpg").convert()
     x_rel_Fondo= variables.xFondo % fondo.get_rect().width  # Hacemos el valor de "x" dividido "%" el ancho del fondo "fondo.get_rect().width"
     ventana.blit(fondo, (x_rel_Fondo - fondo.get_rect().width, 0))
 
     # Este if permite que el fondo se repita indefinidamente
     if(x_rel_Fondo<ANCHO):
         ventana.blit(fondo,(x_rel_Fondo,0))
-    variables.xFondo-=2
+    variables.xFondo-=8  #Cambias la velocidad del fondo.
     #----------------------------Fin Fondo-------------------------------------------
 
 def cargar_piso ():
     #-------------------------------Piso-------------------------------------------
-    piso = pygame.image.load("Imagenes/piso1.jpg").convert()   #cargamos la imagen en variable piso
+    altoPiso = 597 #Calculamos el alto del piso
+
+    piso = pygame.image.load("Imagenes/piso22.jpg").convert()   #cargamos la imagen en variable piso
     x_rel_Piso= variables.xPiso % piso.get_rect().width  #despues del % el comando obtiene el ancho
     #de la foto siendo el divisor de xPiso devuelve el resto
 
-    ventana.blit(piso, (x_rel_Piso-piso.get_rect().width, 500))
+    ventana.blit(piso, (x_rel_Piso-piso.get_rect().width, altoPiso))
     if(x_rel_Piso<ANCHO):
-        ventana.blit(piso,(x_rel_Piso,500)) #Mostramos la imagen
-    variables.xPiso-=5   #Calcula la velocidad mientras el numero sea mas alto mas rapido ira el movimiento de la imagen
+        ventana.blit(piso,(x_rel_Piso,altoPiso)) #Mostramos la imagen
+    variables.xPiso-=10  #Calcula la velocidad mientras el numero sea mas alto mas rapido ira el movimiento de la imagen
     # xPiso es la cantidad de pixeles por segundo
     #-----------------------------FinPiso-------------------------------------------
 
@@ -96,7 +103,7 @@ def movimiento_moto ():
 
 
 #Variables
-FPS =40 #creamos la variable para la cantidad de pixeles a la que queremos que se mueva el fondo
+FPS =45 #creamos la variable para la cantidad de pixeles a la que queremos que se mueva el fondo
 reloj=pygame.time.Clock() # hacemos el reloj para determinar cada cuanto se actualiza
 variables = Variables_CargaImagenes() # En el objeto variables, guardamos las variables para mover el fondo y el piso
 
@@ -119,7 +126,7 @@ salta = pygame.image.load("Imagenes/Moto1.png")
 #Para poder ubicarlo en la pantalla
 x=0
 px = 0
-py = 390
+py = 500
 ancho = 40
 velocidad = 10
 
@@ -135,6 +142,7 @@ acelera = True     #Apretar Intro para que inicie a correr la moto.
 cuentaPasos = 0
 
 
+global contadorVelocidad=0
 
 
 
@@ -159,10 +167,10 @@ while True:
 
     #Tecla Enter - La moto arranca y comienza 
 
-    #Personaje quieto
-    if acelera != True :
+    #Personaje quieto 
+    if acelera != True : # Cuando toque un obstaculo ponemos acelera en false.
         acelera = False
-        cuentaPasos = 0    
+        cuentaPasos = 0   
     
     #Tecla SPACE - Salto
     if not (salto):
@@ -180,11 +188,18 @@ while True:
 
     #Generamos el piso y el fondo movil.
     
+    
     cargar_fondo()
     cargar_piso()
     movimiento_moto()
 
-    pygame.display.update()
+    contadorVelocidad +=10
+
+    if contadorVelocidad == 40:
+
+
+
+    pygame.display.update()  # Para actualizar la pantalla
     reloj.tick(FPS)  #Definimos la cantidad de FPS a la que queremos que vaya el juego
 
 
