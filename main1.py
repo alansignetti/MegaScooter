@@ -11,6 +11,11 @@ LARGO = 720
 
 ventana = pygame.display.set_mode((ANCHO, LARGO))
 
+# QUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE???
+
+
+
+
 #Colocar el titulo a la ventana
 pygame.display.set_caption("MegaScooter")
 
