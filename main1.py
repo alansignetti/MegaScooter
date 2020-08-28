@@ -11,8 +11,6 @@ LARGO = 720
 
 ventana = pygame.display.set_mode((ANCHO, LARGO))
 
-# QUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE???
-
 
 
 
