@@ -47,6 +47,7 @@ class Variables_CargaImagenes():
     def __init__(self):
          self.xPiso=0       
          self.xFondo=0
+         self.numeroVelocidad=15
 
 
 
@@ -64,9 +65,17 @@ def cargar_fondo():
     variables.xFondo-=8  #Cambias la velocidad del fondo.
     #----------------------------Fin Fondo-------------------------------------------
 
+
+
+
+
 def cargar_piso ():
     #-------------------------------Piso-------------------------------------------
     altoPiso = 597 #Calculamos el alto del piso
+    
+
+    if velocidad_a == True:
+        variables.numeroVelocidad += 0.05/50
 
     piso = pygame.image.load("Imagenes/piso22.jpg").convert()   #cargamos la imagen en variable piso
     x_rel_Piso= variables.xPiso % piso.get_rect().width  #despues del % el comando obtiene el ancho
@@ -75,8 +84,9 @@ def cargar_piso ():
     ventana.blit(piso, (x_rel_Piso-piso.get_rect().width, altoPiso))
     if(x_rel_Piso<ANCHO):
         ventana.blit(piso,(x_rel_Piso,altoPiso)) #Mostramos la imagen
-    variables.xPiso-=10  #Calcula la velocidad mientras el numero sea mas alto mas rapido ira el movimiento de la imagen
+        variables.xPiso-=variables.numeroVelocidad #Calcula la velocidad mientras el numero sea mas alto mas rapido ira el movimiento de la imagen
     # xPiso es la cantidad de pixeles por segundo
+
     #-----------------------------FinPiso-------------------------------------------
 
 
@@ -138,7 +148,7 @@ velocidad = 10
 #Variables para que pueda realizar el salto
 salto= False
 #Altura del salto
-cuentaSalto = 10
+cuentaSalto = 11
 
 #Variables de accion
 acelera = True     #Apretar Intro para que inicie a correr la moto.
@@ -147,7 +157,9 @@ acelera = True     #Apretar Intro para que inicie a correr la moto.
 cuentaPasos = 0
 
 
-global contadorVelocidad=0
+global contadorVelocidad
+contadorVelocidad = 0
+velocidad_a = False
 
 
 
@@ -183,11 +195,11 @@ while True:
             salto = True
             cuentaPasos = 0
     else:
-        if cuentaSalto >= -10:
+        if cuentaSalto >= -11:
             py -= (cuentaSalto * abs(cuentaSalto)) * 0.5
             cuentaSalto -= 1
         else:
-            cuentaSalto = 10
+            cuentaSalto = 11
             salto = False
 
 
@@ -198,10 +210,11 @@ while True:
     cargar_piso()
     movimiento_moto()
 
-    contadorVelocidad +=10
+    contadorVelocidad +=1
 
-    if contadorVelocidad == 40:
-
+    if contadorVelocidad == 2000:
+       velocidad_a = True 
+       contadorVelocidad = 0    
 
 
     pygame.display.update()  # Para actualizar la pantalla
