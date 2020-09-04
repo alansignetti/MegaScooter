@@ -8,8 +8,12 @@ pygame.init()
 # Variable para las ventanas 
 ANCHO = 1280
 LARGO = 720
+Blanco = pygame.Color(255, 255, 255)
+
 
 ventana = pygame.display.set_mode((ANCHO, LARGO))
+fuente_Puntuacion=pygame.font.Font("fuentes/8-BIT WONDER.TTF",25)
+
 
 # QUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE???
 
@@ -48,6 +52,7 @@ class Variables_CargaImagenes():
          self.xPiso=0       
          self.xFondo=0
          self.numeroVelocidad=15
+         self.puntos=0
 
 
 
@@ -89,6 +94,9 @@ def cargar_piso ():
 
     #-----------------------------FinPiso-------------------------------------------
 
+def puntuacion():
+    texto_de_puntos=fuente_Puntuacion.render("Puntos "+str(variables.puntos),True,Blanco)
+    ventana.blit(texto_de_puntos,(900,15))
 
 def movimiento_moto ():
 
@@ -182,12 +190,14 @@ while True:
     keys = pygame.key.get_pressed()
 
 
+
     #Tecla Enter - La moto arranca y comienza 
 
     #Personaje quieto 
     if acelera != True : # Cuando toque un obstaculo ponemos acelera en false.
         acelera = False
-        cuentaPasos = 0   
+        cuentaPasos = 0
+          
     
     #Tecla SPACE - Salto
     if not (salto):
@@ -209,12 +219,18 @@ while True:
     cargar_fondo()
     cargar_piso()
     movimiento_moto()
+    puntuacion()
 
     contadorVelocidad +=1
 
     if contadorVelocidad == 2000:
        velocidad_a = True 
-       contadorVelocidad = 0    
+       contadorVelocidad = 0 
+    
+    
+    if(contadorVelocidad%3==0):
+        variables.puntos+=1
+       
 
 
     pygame.display.update()  # Para actualizar la pantalla
