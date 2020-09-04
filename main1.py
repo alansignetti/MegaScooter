@@ -222,13 +222,13 @@ while True:
     puntuacion()
 
     contadorVelocidad +=1
-
-    if contadorVelocidad == 2000:
+    #hace que cada vez se mueva mas rapido, aumentando la dificultad
+    if contadorVelocidad == 10: #estaba en 200, que cambia??
        velocidad_a = True 
        contadorVelocidad = 0 
     
-    
-    if(contadorVelocidad%3==0):
+    #contador de puntos --cuanto mas alto sea el numero del multiplo mas lento suma los puntos
+    if(contadorVelocidad%9==0):
         variables.puntos+=1
        
 
