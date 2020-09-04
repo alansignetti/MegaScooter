@@ -8,8 +8,14 @@ pygame.init()
 # Variable para las ventanas 
 ANCHO = 1280
 LARGO = 720
+Blanco = pygame.Color(255, 255, 255)
+
 
 ventana = pygame.display.set_mode((ANCHO, LARGO))
+fuente_Puntuacion=pygame.font.Font("fuentes/8-BIT WONDER.TTF",25)
+
+
+# QUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE???
 
 
 
@@ -45,6 +51,11 @@ class Variables_CargaImagenes():
     def __init__(self):
          self.xPiso=0       
          self.xFondo=0
+         self.numeroVelocidad=15
+         self.puntos=0
+         self.puntosObstaculo=0
+         #-----------
+         self.xObstaculo = 0
 
 
 
@@ -55,6 +66,7 @@ def cargar_fondo():
     fondo= pygame.image.load("Imagenes/fondo22.jpg").convert()
     x_rel_Fondo= variables.xFondo % fondo.get_rect().width  # Hacemos el valor de "x" dividido "%" el ancho del fondo "fondo.get_rect().width"
     ventana.blit(fondo, (x_rel_Fondo - fondo.get_rect().width, 0))
+    
 
     # Este if permite que el fondo se repita indefinidamente
     if(x_rel_Fondo<ANCHO):
@@ -62,21 +74,55 @@ def cargar_fondo():
     variables.xFondo-=8  #Cambias la velocidad del fondo.
     #----------------------------Fin Fondo-------------------------------------------
 
+
+# def obstaculo():
+
+    
+#     altoObstaculo = 400 #Calculamos el alto del piso
+    
+
+#     if velocidad_a == True:
+#         variables.numeroVelocidad += 0.05/50
+
+#     sierra1 = pygame.image.load("Imagenes/prueba1.png").convert()
+#     x_rel_sierra1= variables.xObstaculo % piso.get_rect().width  #despues del % el comando obtiene el ancho
+#     #de la foto siendo el divisor de xPiso devuelve el resto
+
+#     ventana.blit(sierra1, (sierra1-piso.get_rect().width, altoObstaculo))
+#     ventana.blit(sierra1, (300, 400))
+#     if(x_rel_Piso<ANCHO):
+#         ventana.blit(piso,(x_rel_Piso,altoPiso)) #Mostramos la imagen
+        
+#         variables.xPiso-=variables.numeroVelocidad #Calcula la velocidad mientras el numero sea mas alto mas rapido ira el movimiento de la imagen
+ 
+
 def cargar_piso ():
     #-------------------------------Piso-------------------------------------------
     altoPiso = 597 #Calculamos el alto del piso
+    
 
+    if velocidad_a == True:
+        variables.numeroVelocidad += 0.05/50
+
+    sierra1 = pygame.image.load("Imagenes/Sierras.png").convert()
     piso = pygame.image.load("Imagenes/piso22.jpg").convert()   #cargamos la imagen en variable piso
     x_rel_Piso= variables.xPiso % piso.get_rect().width  #despues del % el comando obtiene el ancho
     #de la foto siendo el divisor de xPiso devuelve el resto
-
+    x_rel_obstaculo= variables.xObstaculo %  sierra1.get_rect().width
+    ventana.blit(sierra1, (x_rel_obstaculo, 400))
     ventana.blit(piso, (x_rel_Piso-piso.get_rect().width, altoPiso))
+    
     if(x_rel_Piso<ANCHO):
         ventana.blit(piso,(x_rel_Piso,altoPiso)) #Mostramos la imagen
-    variables.xPiso-=10  #Calcula la velocidad mientras el numero sea mas alto mas rapido ira el movimiento de la imagen
+        
+        variables.xPiso-=variables.numeroVelocidad #Calcula la velocidad mientras el numero sea mas alto mas rapido ira el movimiento de la imagen
     # xPiso es la cantidad de pixeles por segundo
+
     #-----------------------------FinPiso-------------------------------------------
 
+def puntuacion():
+    texto_de_puntos=fuente_Puntuacion.render("Puntos "+str(variables.puntos),True,Blanco)
+    ventana.blit(texto_de_puntos,(900,15))
 
 def movimiento_moto ():
 
@@ -136,7 +182,7 @@ velocidad = 10
 #Variables para que pueda realizar el salto
 salto= False
 #Altura del salto
-cuentaSalto = 10
+cuentaSalto = 11
 
 #Variables de accion
 acelera = True     #Apretar Intro para que inicie a correr la moto.
@@ -145,7 +191,9 @@ acelera = True     #Apretar Intro para que inicie a correr la moto.
 cuentaPasos = 0
 
 
-global contadorVelocidad=0
+global contadorVelocidad
+contadorVelocidad = 0
+velocidad_a = False
 
 
 
@@ -168,12 +216,14 @@ while True:
     keys = pygame.key.get_pressed()
 
 
+
     #Tecla Enter - La moto arranca y comienza 
 
     #Personaje quieto 
     if acelera != True : # Cuando toque un obstaculo ponemos acelera en false.
         acelera = False
-        cuentaPasos = 0   
+        cuentaPasos = 0
+          
     
     #Tecla SPACE - Salto
     if not (salto):
@@ -181,11 +231,11 @@ while True:
             salto = True
             cuentaPasos = 0
     else:
-        if cuentaSalto >= -10:
+        if cuentaSalto >= -11:
             py -= (cuentaSalto * abs(cuentaSalto)) * 0.5
             cuentaSalto -= 1
         else:
-            cuentaSalto = 10
+            cuentaSalto = 11
             salto = False
 
 
@@ -195,11 +245,21 @@ while True:
     cargar_fondo()
     cargar_piso()
     movimiento_moto()
+    puntuacion()
 
-    contadorVelocidad +=10
-
-    if contadorVelocidad == 40:
-
+    contadorVelocidad +=1
+    # contadorObstaculo +=1
+    #hace que cada vez se mueva mas rapido, au  mentando la dificultad
+    if contadorVelocidad == 10: #estaba en 2000, que cambia??
+       velocidad_a = True 
+       contadorVelocidad = 0 
+    
+    #contador de puntos --cuanto mas alto sea el numero del multiplo mas lento suma los puntos
+    if(contadorVelocidad%4==0):
+        variables.puntos+=1
+    
+    # if(variables.puntos%10<=5 and variables.puntos%10>=0):
+    #     obstaculo()
 
 
     pygame.display.update()  # Para actualizar la pantalla
