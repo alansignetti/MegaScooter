@@ -53,6 +53,9 @@ class Variables_CargaImagenes():
          self.xFondo=0
          self.numeroVelocidad=15
          self.puntos=0
+         self.xobstaculo = 1280
+         self.yobstaculo = 540
+         self.resta=10
 
 
 
@@ -83,13 +86,22 @@ def cargar_piso ():
         variables.numeroVelocidad += 0.05/50
 
     piso = pygame.image.load("Imagenes/piso22.jpg").convert()   #cargamos la imagen en variable piso
+
+    pincho= pygame.image.load("Imagenes/Pincho.png") #Agregamos la imagen del obstaculo
+
     x_rel_Piso= variables.xPiso % piso.get_rect().width  #despues del % el comando obtiene el ancho
     #de la foto siendo el divisor de xPiso devuelve el resto
 
     ventana.blit(piso, (x_rel_Piso-piso.get_rect().width, altoPiso))
     if(x_rel_Piso<ANCHO):
         ventana.blit(piso,(x_rel_Piso,altoPiso)) #Mostramos la imagen
+
+    if variables.xobstaculo >= -100:    #Un if desplaza el obstaculo hacia la izquierda y cuando llega al final, lo devuelve al principio.
+        variables.xobstaculo = variables.xobstaculo - variables.resta
+        ventana.blit (pincho,(variables.xobstaculo,variables.yobstaculo)) 
         variables.xPiso-=variables.numeroVelocidad #Calcula la velocidad mientras el numero sea mas alto mas rapido ira el movimiento de la imagen
+    else:
+        variables.xobstaculo = 1280
     # xPiso es la cantidad de pixeles por segundo
 
     #-----------------------------FinPiso-------------------------------------------
@@ -122,6 +134,7 @@ def movimiento_moto ():
 
     else:
        ventana.blit(quieto,(int(px), int(py)))
+
 
 
 
@@ -218,8 +231,10 @@ while True:
     
     cargar_fondo()
     cargar_piso()
+    # obstaculo()
     movimiento_moto()
     puntuacion()
+
 
     contadorVelocidad +=1
 
