@@ -23,27 +23,7 @@ fuente_Puntuacion=pygame.font.Font("fuentes/8-BIT WONDER.TTF",25)
 #Colocar el titulo a la ventana
 pygame.display.set_caption("MegaScooter")
 
-# class Piso():
-#     def __init__(self):
-#         self.x=0        #inicializacion en 0
-#         self.y=100
 
-# class Nivel():
-#     def __init__(self):
-#         self.velocidad=-6
-
-# velocidad=Nivel()
-# pisoNuevo=Piso()
-# def dibujarPiso():
-#     piso = pygame.image.load("Imagenes/piso1.jpg").convert()   #cargamos la imagen en variable fondo
-#     ventana.blit(piso, (pisoNuevo.x, 500))
-
-# def logicaPiso():
-    
-#     if(pisoNuevo.x<-800):  #-- -900 Si no llega a -800 resta 2px al costado la imagen
-#         pisoNuevo.x=800  # -- 100+ANCHO
-#     else:
-#         pisoNuevo.x+=velocidad.velocidad
 
 # En esta clase vamos a guardar las variables que utilizamos para hacer el fondo y el piso movil.
 class Variables_CargaImagenes():
@@ -53,6 +33,9 @@ class Variables_CargaImagenes():
          self.xFondo=0
          self.numeroVelocidad=15
          self.puntos=0
+         self.xobstaculo = 1280
+         self.yobstaculo = 540
+         self.resta=15
 
 
 
@@ -83,16 +66,32 @@ def cargar_piso ():
         variables.numeroVelocidad += 0.05/50
 
     piso = pygame.image.load("Imagenes/piso22.jpg").convert()   #cargamos la imagen en variable piso
+
+    pincho= pygame.image.load("Imagenes/Pincho.png") #Agregamos la imagen del obstaculo
+
     x_rel_Piso= variables.xPiso % piso.get_rect().width  #despues del % el comando obtiene el ancho
     #de la foto siendo el divisor de xPiso devuelve el resto
 
     ventana.blit(piso, (x_rel_Piso-piso.get_rect().width, altoPiso))
     if(x_rel_Piso<ANCHO):
         ventana.blit(piso,(x_rel_Piso,altoPiso)) #Mostramos la imagen
+
+    if variables.xobstaculo >= -100:    #Un if desplaza el obstaculo hacia la izquierda y cuando llega al final, lo devuelve al principio.
+         
+        variables.xobstaculo = variables.xobstaculo - variables.resta
+        ventana.blit (pincho,(variables.xobstaculo,variables.yobstaculo)) 
         variables.xPiso-=variables.numeroVelocidad #Calcula la velocidad mientras el numero sea mas alto mas rapido ira el movimiento de la imagen
+    else:
+        variables.xobstaculo = 1280 #Cuando el obstaculo llegue a la punta izquierda, setea la variable para ponerlo al principio. 
+        variables.resta +=0.5  #En cuanto queres que se incremente cada vez que vuelva a aparecer de vuelta el obstaculo
     # xPiso es la cantidad de pixeles por segundo
 
     #-----------------------------FinPiso-------------------------------------------
+
+
+
+
+
 
 def puntuacion():
     texto_de_puntos=fuente_Puntuacion.render("Puntos "+str(variables.puntos),True,Blanco)
@@ -122,6 +121,7 @@ def movimiento_moto ():
 
     else:
        ventana.blit(quieto,(int(px), int(py)))
+
 
 
 
@@ -156,7 +156,7 @@ velocidad = 10
 #Variables para que pueda realizar el salto
 salto= False
 #Altura del salto
-cuentaSalto = 11
+cuentaSalto = 13
 
 #Variables de accion
 acelera = True     #Apretar Intro para que inicie a correr la moto.
@@ -191,7 +191,7 @@ while True:
 
 
 
-    #Tecla Enter - La moto arranca y comienza 
+    
 
     #Personaje quieto 
     if acelera != True : # Cuando toque un obstaculo ponemos acelera en false.
@@ -205,11 +205,11 @@ while True:
             salto = True
             cuentaPasos = 0
     else:
-        if cuentaSalto >= -11:
-            py -= (cuentaSalto * abs(cuentaSalto)) * 0.5
+        if cuentaSalto >= -13:
+            py -= (cuentaSalto * abs(cuentaSalto)) * 0.2
             cuentaSalto -= 1
         else:
-            cuentaSalto = 11
+            cuentaSalto = 13
             salto = False
 
 
@@ -220,6 +220,7 @@ while True:
     cargar_piso()
     movimiento_moto()
     puntuacion()
+
 
     contadorVelocidad +=1
     #hace que cada vez se mueva mas rapido, aumentando la dificultad
