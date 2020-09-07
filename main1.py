@@ -61,7 +61,7 @@ def cargar_piso ():
     altoPiso = 597 #Calculamos el alto del piso
     
     if velocidad_a == True:
-        variables.numeroVelocidad += 0.05/50
+        variables.numeroVelocidad += 0.05/5
         
     piso = pygame.image.load("Imagenes/piso22.jpg").convert()   #cargamos la imagen en variable piso
     
@@ -81,31 +81,39 @@ def cargar_piso ():
 
 def obstaculo ():
 
+    global iteradorObstaculo
 
     if cambiarObstaculo==1:
-        vobstaculo= pygame.image.load('Imagenes/Sierras1.png')
+        
+        vobstaculo=[pygame.image.load('Imagenes/Sierras1.png'),
+                    pygame.image.load('Imagenes/Sierras2.png'),
+                    pygame.image.load('Imagenes/Sierras3.png'),
+                    pygame.image.load('Imagenes/Sierras4.png')
+                    ] 
 
-                    #pygame.image.load('Imagenes/Sierras2.png'),
-                    #pygame.image.load('Imagenes/Sierras3.png'),
-                    #pygame.image.load('Imagenes/Sierras4.png') 
-                    
-    
+        if iteradorObstaculo + 1 >= 4: #Este iterador recorre las 4 imagenes de la sierra
+            iteradorObstaculo = 0 
+          
+        variables.xobstaculo = variables.xobstaculo - variables.resta  
+        ventana.blit(vobstaculo[iteradorObstaculo // 1], (int(variables.xobstaculo), int(variables.yobstaculo)))
+        iteradorObstaculo += 1
+
+        if variables.xobstaculo <= -200 : 
+            variables.xobstaculo = 1280
+            variables.resta +=0.5
+
+
     else:
         vobstaculo= pygame.image.load("Imagenes/Pincho.png") #Agregamos la imagen del obstaculo
 
-
-
-    # pincho= pygame.image.load("Imagenes/Pincho.png") #Agregamos la imagen del obstaculo
-
-    if variables.xobstaculo >= -100:    #Un if desplaza el obstaculo hacia la izquierda y cuando llega al final, lo devuelve al principio.
+        if variables.xobstaculo >= -100:    #Un if desplaza el obstaculo hacia la izquierda y cuando llega al final, lo devuelve al principio.
          
-        variables.xobstaculo = variables.xobstaculo - variables.resta
-        ventana.blit (vobstaculo,(variables.xobstaculo,variables.yobstaculo)) 
+            variables.xobstaculo = variables.xobstaculo - variables.resta
+            ventana.blit (vobstaculo,(variables.xobstaculo,variables.yobstaculo)) 
 
-    else:
-        variables.xobstaculo = 1280 #Cuando el obstaculo llegue a la punta izquierda, setea la variable para ponerlo al principio. 
-        variables.resta +=0.5  #En cuanto queres que se incremente cada vez que vuelva a aparecer de vuelta el obstaculo
-
+        else:
+            variables.xobstaculo = 1280 #Cuando el obstaculo llegue a la punta izquierda, setea la variable para ponerlo al principio. 
+            variables.resta +=0.5  #En cuanto queres que se incremente cada vez que vuelva a aparecer de vuelta el obstaculo
 
 
 
@@ -139,6 +147,12 @@ def movimiento_moto ():
     else:
        ventana.blit(quieto,(int(px), int(py)))
 
+
+
+#Variables para usar los obstaculos----------------------------------------------------------------------------------------------------------------------
+
+#El iterador para pasar las imagenes de las sierras
+iteradorObstaculo=0
 
 
 
@@ -180,6 +194,7 @@ acelera = True     #Apretar Intro para que inicie a correr la moto.
 
 #Pasos
 cuentaPasos = 0
+
 
 
 global contadorVelocidad
@@ -238,17 +253,17 @@ while True:
     #Generamos el piso y el fondo movil.
     
     
-    cargar_fondo()
-    cargar_piso()
-    obstaculo()
-    movimiento_moto()
-    puntuacion()
+    cargar_fondo()     #Controlamos la velocidad del fondo
+    cargar_piso()      #Controlamos la velocidad del piso 
+    obstaculo()        #Controlamos la aparicion y cambio de obstaculos  
+    movimiento_moto()  #Movimiento de la moto 
+    puntuacion()        
 
     
     contadorVelocidad +=1
     contadorObstaculo +=1
     #hace que cada vez se mueva mas rapido, aumentando la dificultad
-    if contadorVelocidad == 100: #estaba en 200, que cambia??
+    if contadorVelocidad == 100: #estaba en 200, que cambia??  -- Es la cantidad de vueltas que tiene que hacer el bucle, para aumentar en 0,01 la velocidad del piso. 
        velocidad_a = True 
        contadorVelocidad = 0 
        
