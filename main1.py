@@ -2,6 +2,8 @@
 import pygame,sys
 from pygame.locals import *
 
+import random # para los numeros aleatorios
+
 # Inicializamos todos los modulos de pygame
 pygame.init()
 
@@ -58,14 +60,11 @@ def cargar_piso ():
     #-------------------------------Piso-------------------------------------------
     altoPiso = 597 #Calculamos el alto del piso
     
-
     if velocidad_a == True:
         variables.numeroVelocidad += 0.05/50
-
+        
     piso = pygame.image.load("Imagenes/piso22.jpg").convert()   #cargamos la imagen en variable piso
-
     
-
     x_rel_Piso= variables.xPiso % piso.get_rect().width  #despues del % el comando obtiene el ancho
     #de la foto siendo el divisor de xPiso devuelve el resto
 
@@ -79,14 +78,29 @@ def cargar_piso ():
     #-----------------------------FinPiso-------------------------------------------
 
 
+
 def obstaculo ():
 
-    pincho= pygame.image.load("Imagenes/Pincho.png") #Agregamos la imagen del obstaculo
+
+    if cambiarObstaculo==1:
+        vobstaculo= pygame.image.load('Imagenes/Sierras1.png')
+
+                    #pygame.image.load('Imagenes/Sierras2.png'),
+                    #pygame.image.load('Imagenes/Sierras3.png'),
+                    #pygame.image.load('Imagenes/Sierras4.png') 
+                    
+    
+    else:
+        vobstaculo= pygame.image.load("Imagenes/Pincho.png") #Agregamos la imagen del obstaculo
+
+
+
+    # pincho= pygame.image.load("Imagenes/Pincho.png") #Agregamos la imagen del obstaculo
 
     if variables.xobstaculo >= -100:    #Un if desplaza el obstaculo hacia la izquierda y cuando llega al final, lo devuelve al principio.
          
         variables.xobstaculo = variables.xobstaculo - variables.resta
-        ventana.blit (pincho,(variables.xobstaculo,variables.yobstaculo)) 
+        ventana.blit (vobstaculo,(variables.xobstaculo,variables.yobstaculo)) 
 
     else:
         variables.xobstaculo = 1280 #Cuando el obstaculo llegue a la punta izquierda, setea la variable para ponerlo al principio. 
@@ -170,6 +184,11 @@ cuentaPasos = 0
 
 global contadorVelocidad
 contadorVelocidad = 0
+global contadorObstaculo
+contadorObstaculo = 0
+global cambiarObstaculo
+cambiarObstaculo = 0
+
 velocidad_a = False
 
 
@@ -192,7 +211,7 @@ while True:
     #Opción tecla pulsada
     keys = pygame.key.get_pressed()
 
-
+    
 
     
 
@@ -225,15 +244,23 @@ while True:
     movimiento_moto()
     puntuacion()
 
-
+    
     contadorVelocidad +=1
-
-    if contadorVelocidad == 2000:
+    contadorObstaculo +=1
+    #hace que cada vez se mueva mas rapido, aumentando la dificultad
+    if contadorVelocidad == 100: #estaba en 200, que cambia??
        velocidad_a = True 
        contadorVelocidad = 0 
+       
     
+    if contadorVelocidad%100==0: #estaba en 200, que cambia??
+        cambiarObstaculo= 1
+    if contadorObstaculo>400:
+         cambiarObstaculo= 0
+         contadorObstaculo=0
     
-    if(contadorVelocidad%3==0):
+    #contador de puntos --cuanto mas alto sea el numero del multiplo mas lento suma los puntos
+    if(contadorVelocidad%9==0):
         variables.puntos+=1
        
 
