@@ -15,7 +15,6 @@ ventana = pygame.display.set_mode((ANCHO, LARGO))
 fuente_Puntuacion=pygame.font.Font("fuentes/8-BIT WONDER.TTF",25)
 
 
-# QUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE???
 
 
 
@@ -55,8 +54,6 @@ def cargar_fondo():
 
 
 
-
-
 def cargar_piso ():
     #-------------------------------Piso-------------------------------------------
     altoPiso = 597 #Calculamos el alto del piso
@@ -67,7 +64,7 @@ def cargar_piso ():
 
     piso = pygame.image.load("Imagenes/piso22.jpg").convert()   #cargamos la imagen en variable piso
 
-    pincho= pygame.image.load("Imagenes/Pincho.png") #Agregamos la imagen del obstaculo
+    
 
     x_rel_Piso= variables.xPiso % piso.get_rect().width  #despues del % el comando obtiene el ancho
     #de la foto siendo el divisor de xPiso devuelve el resto
@@ -75,19 +72,25 @@ def cargar_piso ():
     ventana.blit(piso, (x_rel_Piso-piso.get_rect().width, altoPiso))
     if(x_rel_Piso<ANCHO):
         ventana.blit(piso,(x_rel_Piso,altoPiso)) #Mostramos la imagen
+        variables.xPiso-=variables.numeroVelocidad #Calcula la velocidad mientras el numero sea mas alto mas rapido ira el movimiento de la imagen
+    
+        # xPiso es la cantidad de pixeles por segundo
+
+    #-----------------------------FinPiso-------------------------------------------
+
+
+def obstaculo ():
+
+    pincho= pygame.image.load("Imagenes/Pincho.png") #Agregamos la imagen del obstaculo
 
     if variables.xobstaculo >= -100:    #Un if desplaza el obstaculo hacia la izquierda y cuando llega al final, lo devuelve al principio.
          
         variables.xobstaculo = variables.xobstaculo - variables.resta
         ventana.blit (pincho,(variables.xobstaculo,variables.yobstaculo)) 
-        variables.xPiso-=variables.numeroVelocidad #Calcula la velocidad mientras el numero sea mas alto mas rapido ira el movimiento de la imagen
+
     else:
         variables.xobstaculo = 1280 #Cuando el obstaculo llegue a la punta izquierda, setea la variable para ponerlo al principio. 
         variables.resta +=0.5  #En cuanto queres que se incremente cada vez que vuelva a aparecer de vuelta el obstaculo
-    # xPiso es la cantidad de pixeles por segundo
-
-    #-----------------------------FinPiso-------------------------------------------
-
 
 
 
@@ -218,6 +221,7 @@ while True:
     
     cargar_fondo()
     cargar_piso()
+    obstaculo()
     movimiento_moto()
     puntuacion()
 
