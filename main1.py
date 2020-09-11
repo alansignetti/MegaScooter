@@ -19,8 +19,6 @@ fuente_Puntuacion=pygame.font.Font("fuentes/8-BIT WONDER.TTF",25)
 
 
 
-
-
 #Colocar el titulo a la ventana
 pygame.display.set_caption("MegaScooter")
 
@@ -148,6 +146,23 @@ def movimiento_moto ():
        ventana.blit(quieto,(int(px), int(py)))
 
 
+#Cargamos el sprite de moto
+Moto_sprite = pygame.image.load("Imagenes/Moto.png").convert_alpha()
+
+def recorte_imagen (a,b,c,d):
+    
+    global Moto_sprite
+    
+    #Moto_sprite = pygame.image.load("Imagenes/Personaje_Sprite.png").convert_alpha()  #Cargamos la imagen con los movimientos
+    Moto_sprite.set_clip(pygame.Rect(a,b,c,d))  
+    Moto_1 = Moto_sprite.subsurface(Moto_sprite.get_clip())
+    Ancho_moto = Moto_1.get_size()
+    MotoBig = pygame.transform.scale(Moto_1,(int(Ancho_moto[0]*2),(Ancho_moto[1]*2)))
+    return MotoBig
+
+
+
+
 
 #Variables para usar los obstaculos----------------------------------------------------------------------------------------------------------------------
 
@@ -165,10 +180,16 @@ variables = Variables_CargaImagenes() # En el objeto variables, guardamos las va
 
 quieto = pygame.image.load("Imagenes/Moto1.png")
 
-acelerando = [ pygame.image.load('Imagenes/Moto1.png'),
-            pygame.image.load('Imagenes/Moto2.png'),
-            pygame.image.load('Imagenes/Moto3.png'),
-            pygame.image.load('Imagenes/Moto4.png')
+
+#0,115,106,62
+    #106,115,105,57
+    #213,115,105,57
+    #318,115,105,57
+
+acelerando = [ recorte_imagen(0,115,106,62),
+               recorte_imagen(106,115,105,57),
+               recorte_imagen(213,115,105,57),
+               recorte_imagen(318,115,105,57)  
           ]
 
 salta = pygame.image.load("Imagenes/Moto1.png")
@@ -191,6 +212,10 @@ cuentaSalto = 13
 
 #Variables de accion
 acelera = True     #Apretar Intro para que inicie a correr la moto.
+
+
+
+#------------------------------Inicializamos variables globales ---------------------------------------
 
 #Pasos
 cuentaPasos = 0
@@ -225,8 +250,6 @@ while True:
 
     #Opción tecla pulsada
     keys = pygame.key.get_pressed()
-
-    
 
     
 
