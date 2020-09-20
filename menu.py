@@ -7,8 +7,9 @@ class Menu():
         self.correr_pantalla = True
         self.cursor_rect = pygame.Rect(0, 0, 20, 20)
         self.cursor_rectDer = pygame.Rect(0, 0, 20, 20)
-        self.offset = -100 #aca es un atributo fijo,lo llamamos cuando dibujamos el asterisco para que este -100 pixeles del texto del menu
-        self.offder = 118
+        self.offset = -130 #aca es un atributo fijo,lo llamamos cuando dibujamos el asterisco para que este -100 pixeles del texto del menu
+        self.offder = 150
+        
     def draw_cursor(self):
         self.game.draw_text('*', 15, self.cursor_rect.x, self.cursor_rect.y)
         self.game.draw_text('*', 15, self.cursor_rectDer.x, self.cursor_rectDer.y)
@@ -35,8 +36,8 @@ class MainMenu(Menu):
             self.check_input()
             self.game.pantalla.fill(self.game.Negro)
             self.game.draw_text('Menu principal', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 20)
-            self.game.draw_text("Start Game", 20, self.startx, self.starty)
-            self.game.draw_text("Optiones", 20, self.opcionesx, self.opcionesy)
+            self.game.draw_text("Iniciar Partida", 20, self.startx, self.starty)
+            self.game.draw_text("Opciones", 20, self.opcionesx, self.opcionesy)
             self.game.draw_text("Creditos", 20, self.creditsx, self.creditsy)
             self.game.draw_text("Salir", 20, self.salirx, self.saliry)
             self.draw_cursor()

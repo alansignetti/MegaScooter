@@ -36,13 +36,15 @@ class Game():
         self.contadorVelocidad =0
         self.puntos=0
         self.cuentaSalto = 13
-        self.px=0
+        self.px = 0
         self.py=500
         self.tam_fuente_puntos=25
         self.pausa=False
         self.iteradorObstaculo=0
         self.cambiarObstaculo=0
         self.contadorObstaculo=0
+        self.acelerando = []
+        self.Moto_sprite = pygame.image.load("Imagenes/Moto.png")  
         
         
         
@@ -71,7 +73,6 @@ class Game():
 
 
 
-            
 
             #Personaje quieto 
             if self.acelera != True : # Cuando toque un obstaculo ponemos acelera en false.
@@ -101,6 +102,7 @@ class Game():
             self.obstaculo()
             self.movimiento_moto()
             self.puntuacion()
+            self.colisiones()
 
 
             self.contadorVelocidad +=1
@@ -113,7 +115,7 @@ class Game():
             
             if(self.contadorVelocidad %100==0): #estaba en 200, que cambia??
                 self.puntos+=1
-                self.cambiarObstaculo= 1
+                #self.cambiarObstaculo= 1
             if self.contadorObstaculo>400:
                 self.cambiarObstaculo= 0
                 self.contadorObstaculo=0
@@ -247,6 +249,17 @@ class Game():
 
 
 
+    def colisiones (self):
+
+    
+         if self.salto == False and self.xobstaculo <180 and self.xobstaculo >5:
+            pygame.quit()
+            sys.exit()
+
+
+
+
+
     def draw_text(self, text, size, x, y ):
         font = pygame.font.Font(self.fuente_Puntuacion,size)
         text_surface = font.render(text, True, self.Blanco)
@@ -255,6 +268,17 @@ class Game():
         self.pantalla.blit(text_surface,text_rect)
 
 
+    
+    def recorte_imagen (self,a,b,c,d,imagen):
+
+
+        self.Moto_sprite.set_clip(pygame.Rect(a,b,c,d))  
+        Moto_1 = self.Moto_sprite.subsurface(self.Moto_sprite.get_clip())
+        Ancho_moto = Moto_1.get_size()
+        MotoBig = pygame.transform.scale(Moto_1,(int(Ancho_moto[0]*2),(Ancho_moto[1]*2)))
+        return MotoBig
+    
+    
 
 
     def puntuacion(self):
@@ -273,6 +297,17 @@ class Game():
         #global cuentaPasos
         global x
 
+        #global Moto_sprite = pygame.image.load("Imagenes/Moto.png")
+
+        self.acelerando = [
+                            self.recorte_imagen(0,115,106,62,self.Moto_sprite),
+                            self.recorte_imagen(106,115,105,57,self.Moto_sprite),
+                            self.recorte_imagen(213,115,105,57,self.Moto_sprite),
+                            self.recorte_imagen(318,115,105,57,self.Moto_sprite)  
+                    ]
+
+
+        
         #Estos if anidados definen segun la tecla que se aprete las imagenes que se tiene que mostrar
 
         #Contador de pasos
@@ -294,21 +329,4 @@ class Game():
 
     
     
-    #Cargamos el sprite de moto
-    Moto_sprite = pygame.image.load("Imagenes/Moto.png").convert_alpha()
-
-    def recorte_imagen (a,b,c,d,imagen):
-        
-        Moto_sprite=imagen.convert_alpha()
-        #Moto_sprite = pygame.image.load("Imagenes/Personaje_Sprite.png").convert_alpha()  #Cargamos la imagen con los movimientos
-        Moto_sprite.set_clip(pygame.Rect(a,b,c,d))  
-        Moto_1 = Moto_sprite.subsurface(Moto_sprite.get_clip())
-        Ancho_moto = Moto_1.get_size()
-        MotoBig = pygame.transform.scale(Moto_1,(int(Ancho_moto[0]*2),(Ancho_moto[1]*2)))
-        return MotoBig
     
-    acelerando = [recorte_imagen(0,115,106,62,Moto_sprite),
-               recorte_imagen(106,115,105,57,Moto_sprite),
-               recorte_imagen(213,115,105,57,Moto_sprite),
-               recorte_imagen(318,115,105,57,Moto_sprite)  
-        ]
