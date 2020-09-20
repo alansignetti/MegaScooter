@@ -57,6 +57,9 @@ class Game():
     #Videos para hacer el fondo y el piso movil https://www.youtube.com/watch?v=Ftln3VrFV6s&list=PLVzwufPir356RMxSsOccc38jmxfxqfBdp&index=4   
 
     def loop_juego(self):
+        pygame.mixer.music.pause()
+        pygame.mixer.music.load('Sonidos/juego.mp3')
+        pygame.mixer.music.play(1)
         while self.jugando:
             
             self.comprobar_evento()

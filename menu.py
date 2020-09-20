@@ -30,6 +30,8 @@ class MainMenu(Menu):
         self.cursor_rectDer.midtop = (self.startx + self.offder,self.starty) #dibujamos el asterisco de la izquierda
     def display_menu(self):
         self.correr_pantalla = True
+        pygame.mixer.music.load('Sonidos/pokemon.mp3')
+        pygame.mixer.music.play(1)
         while self.correr_pantalla:
             self.game.comprobar_evento()    #comprobamos si se presiono una tecla o la x de la ventana para salir
             self.check_input()
