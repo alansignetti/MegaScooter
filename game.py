@@ -59,16 +59,21 @@ class Game():
     #Videos para hacer el fondo y el piso movil https://www.youtube.com/watch?v=Ftln3VrFV6s&list=PLVzwufPir356RMxSsOccc38jmxfxqfBdp&index=4   
 
     def loop_juego(self):
-        pygame.mixer.music.pause()
-        pygame.mixer.music.load('Sonidos/juego.mp3')
-        pygame.mixer.music.play(1)
+        if(self.jugando):
+            self.mute()
+            pygame.mixer.music.set_volume(1)
+            pygame.mixer.music.load('Sonidos/juego.mp3')
+            pygame.mixer.music.play(1)
+
         while self.jugando:
             
             self.comprobar_evento()
             if self.ESCAPE_KEY:  #si apretamos enter el juego vuelve al menu
                 self.jugando= False
             elif self.P_KEY:    # si apretamos la "p" muestra el carter de pausa
-                self.pausar()
+                self.mute() #muteamos la cancion 
+                self.pausar()  #mostramos mensaje de pausa
+                self.unmute()  #volvemos a escuchar la cancion
                 
 
             #Opción tecla pulsada
@@ -131,7 +136,12 @@ class Game():
             self.reiniciar_tecla()
             pygame.display.update()
             self.reloj.tick(self.FPS)
-            
+    
+    def mute(self):
+        pygame.mixer.music.pause()
+    
+    def unmute(self):
+        pygame.mixer.music.unpause()
 
     def reiniciar_tecla(self):
         self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY, self.ESCAPE_KEY,self.P_KEY = False,False,False, False, False, False
