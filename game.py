@@ -7,6 +7,10 @@ from menu import *
 class Game():
     def __init__(self):
         #pygame.init()
+        self.reiniciar_juego()
+        
+        
+    def reiniciar_juego(self):
         self.funcionando, self.jugando = True, False
         self.Color,self.Verde,self.Gris,self.Amarillo,self.Azul,self.Blanco,self.Negro=(70,80,150),(0, 255, 126),(165, 172, 171),(243, 254, 0),(0, 51, 254),(255, 255, 255),(0,0,0)
         self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY, self.ESCAPE_KEY,self.P_KEY = False,False, False, False, False, False
@@ -45,7 +49,7 @@ class Game():
         self.contadorObstaculo=0
         self.acelerando = []
         self.Moto_sprite = pygame.image.load("Imagenes/Moto.png")  
-        
+        self.perder=False
         
         
     pygame.init()
@@ -261,13 +265,29 @@ class Game():
                 self.resta +=0.5  #En cuanto queres que se incremente cada vez que vuelva a aparecer de vuelta el obstaculo
 
 
-
     def colisiones (self):
 
     
-         if self.salto == False and self.xobstaculo <180 and self.xobstaculo >5:
-            pygame.quit()
-            sys.exit()
+        if self.salto == False and self.xobstaculo <180 and self.xobstaculo >5:
+            self.perder=True
+            while self.perder:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_p:
+                            self.perder=False
+                            self.reiniciar_juego()
+                            
+                            
+                fuentePerder=pygame.font.Font(self.fuente_Puntuacion,self.tam_fuente_puntos)
+                texto_de_pausa=fuentePerder.render("Perdiste amiguito",True,self.Blanco)
+                self.ventana.blit(texto_de_pausa,(self.ANCHO/2,self.LARGO/2))
+                pygame.display.update()
+                #pygame.quit()
+                #sys.exit()
+            self.reiniciar_juego()
 
 
 
