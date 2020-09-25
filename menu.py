@@ -32,7 +32,7 @@ class MainMenu(Menu):
     def display_menu(self):
         self.correr_pantalla = True
         pygame.mixer.music.load('Sonidos/pokemon.mp3')
-        pygame.mixer.music.set_volume(0.2)
+        pygame.mixer.music.set_volume(0.1)
         pygame.mixer.music.play(1)
         while self.correr_pantalla:
             self.game.comprobar_evento()    #comprobamos si se presiono una tecla o la x de la ventana para salir
@@ -148,10 +148,10 @@ class CreditsMenu(Menu):
                 self.correr_pantalla = False    # seteamos la variable para salir del bucle
             self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
             self.game.draw_text('Creditos', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 20)  #mostramos el titulo del menu
-            self.game.draw_text('Persona 1', 15, self.game.ANCHO / 2 -4, self.game.LARGO / 2 + 10) #mostramos la persona
-            self.game.draw_text('Persona 2', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 30) #mostramos la persona 
-            self.game.draw_text('Persona 3', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 50) #mostramos la persona
-            self.game.draw_text('Persona 4', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 70) #mostramos la persona
+            self.game.draw_text('Alan Signetti', 15, self.game.ANCHO / 2 -4, self.game.LARGO / 2 + 10) #mostramos la persona
+            self.game.draw_text('Cristian Scarella', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 30) #mostramos la persona 
+            self.game.draw_text('Yago Rexach', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 50) #mostramos la persona
+            self.game.draw_text('Fernando Scroppo', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 70) #mostramos la persona
 
             self.blit_screen()
 
