@@ -61,7 +61,7 @@ class Game():
     def loop_juego(self):
         if(self.jugando):
             self.mute()
-            pygame.mixer.music.set_volume(1)
+            pygame.mixer.music.set_volume(0.1)
             pygame.mixer.music.load('Sonidos/juego.mp3')
             pygame.mixer.music.play(1)
 
