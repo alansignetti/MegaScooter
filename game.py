@@ -49,7 +49,6 @@ class Game():
         self.contadorObstaculo=0
         self.acelerando = []
         self.Moto_sprite = pygame.image.load("Imagenes/Moto.png")  
-        self.Marcador = pygame.image.load("Imagenes/marcador.png")
         self.perder=False
         
         
