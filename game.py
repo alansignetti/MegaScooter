@@ -49,6 +49,7 @@ class Game():
         self.contadorObstaculo=0
         self.acelerando = []
         self.Moto_sprite = pygame.image.load("Imagenes/Moto.png")  
+        self.Marcador = pygame.image.load("Imagenes/marcador.png")
         self.perder=False
         
         
@@ -78,13 +79,14 @@ class Game():
                 self.mute() #muteamos la cancion 
                 self.pausar()  #mostramos mensaje de pausa
                 self.unmute()  #volvemos a escuchar la cancion
+            
+
                 
 
             #Opción tecla pulsada
             keys = pygame.key.get_pressed()
 
-
-
+            
 
             #Personaje quieto 
             if self.acelera != True : # Cuando toque un obstaculo ponemos acelera en false.
@@ -101,6 +103,7 @@ class Game():
                 if self.cuentaSalto >= -13:
                     self.py -= (self.cuentaSalto * abs(self.cuentaSalto)) * 0.2
                     self.cuentaSalto -= 1
+                   
                 else:
                     self.cuentaSalto = 13
                     self.salto = False
@@ -115,6 +118,8 @@ class Game():
             self.movimiento_moto()
             self.puntuacion()
             self.colisiones()
+            #self.ventana.blit(self.Marcador,(self.xobstaculo,self.yobstaculo))
+            
 
 
             self.contadorVelocidad +=1
@@ -183,6 +188,7 @@ class Game():
                     if event.key == pygame.K_p:
                         self.pausa=False
             fuente=pygame.font.Font(self.fuente_Puntuacion,self.tam_fuente_puntos)
+            pygame.draw.rect(self.ventana,self.Negro, pygame.Rect((635,350, 135, 50)),0)
             texto_de_pausa=fuente.render("PAUSA",True,self.Blanco)
             self.ventana.blit(texto_de_pausa,(self.ANCHO/2,self.LARGO/2))
             pygame.display.update()
@@ -266,9 +272,8 @@ class Game():
 
 
     def colisiones (self):
-
-    
-        if self.salto == False and self.xobstaculo <180 and self.xobstaculo >5:
+     
+       if self.xobstaculo >5 and self.xobstaculo <180 and self.py>480 and self.py<501: # and self.py>499 and self.py<1000
             self.perder=True
             while self.perder:
                 for event in pygame.event.get():
@@ -282,12 +287,24 @@ class Game():
                             
                             
                 fuentePerder=pygame.font.Font(self.fuente_Puntuacion,self.tam_fuente_puntos)
-                texto_de_pausa=fuentePerder.render("Perdiste amiguito",True,self.Blanco)
-                self.ventana.blit(texto_de_pausa,(self.ANCHO/2,self.LARGO/2))
+
+                
+                
+                
+                
+                # dibuja el rectángulo
+                pygame.draw.rect(self.ventana,self.Negro, pygame.Rect((590,350, 200, 50)),0)    #pygame.Rect (x,y,ancho,alto) dibujar un rectangulo
+                pygame.draw.rect(self.ventana,self.Negro, pygame.Rect((515,500, 350, 70)),0)
+                texto_de_pausa=fuentePerder.render("Perdiste",True,self.Blanco)
+                texto_de_pausa_2 = fuentePerder.render("Presiona P para",True,self.Blanco)
+                texto_de_pausa_3 = fuentePerder.render("*REINTENTAR*",True,self.Blanco)
+                self.ventana.blit(texto_de_pausa,(600,360))
+                self.ventana.blit(texto_de_pausa_2,(520,500))
+                self.ventana.blit(texto_de_pausa_3,(560,540))
                 pygame.display.update()
                 #pygame.quit()
                 #sys.exit()
-            self.reiniciar_juego()
+            self.reiniciar_juego()     
 
 
 
