@@ -22,6 +22,7 @@ class Game():
         self.options = OptionsMenu(self)
         self.credits = CreditsMenu(self)
         self.salir = SalirMenu(self)
+        self.pausaMenu = PausaMenu(self)
         self.menu_actual = self.main_menu
         self.titulo=pygame.display.set_caption("MegaScooter")
         self.xPiso=0       
@@ -50,6 +51,8 @@ class Game():
         self.acelerando = []
         self.Moto_sprite = pygame.image.load("Imagenes/Moto.png")  
         self.perder=False
+        self.esMenu="Iniciar"
+        self.controles=ControlesMenu(self)
         
         
     pygame.init()
@@ -74,6 +77,8 @@ class Game():
             self.comprobar_evento()
             if self.ESCAPE_KEY:  #si apretamos enter el juego vuelve al menu
                 self.jugando= False
+                self.menu_actual=self.pausaMenu
+                self.esMenu="Continuar" #esto es para el menu de opciones y creditos para que muestre continuar
             elif self.P_KEY:    # si apretamos la "p" muestra el carter de pausa
                 self.mute() #muteamos la cancion 
                 self.pausar()  #mostramos mensaje de pausa

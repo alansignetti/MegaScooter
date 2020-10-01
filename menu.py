@@ -29,6 +29,7 @@ class MainMenu(Menu):
         self.salirx, self.saliry = self.mitad_ancho, self.mitad_alto + 90
         self.cursor_rect.midtop = (self.startx + self.offset, self.starty)  #dibujamos el asterisco de la izquierda 
         self.cursor_rectDer.midtop = (self.startx + self.offder,self.starty) #dibujamos el asterisco de la izquierda
+        self.partida="Iniciar Partida"
     def display_menu(self):
         self.correr_pantalla = True
         pygame.mixer.music.load('Sonidos/pokemon.mp3')
@@ -39,7 +40,7 @@ class MainMenu(Menu):
             self.check_input()
             self.game.pantalla.fill(self.game.Negro)
             self.game.draw_text('Menu principal', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 20)
-            self.game.draw_text("Iniciar Partida", 20, self.startx, self.starty)
+            self.game.draw_text(self.partida, 20, self.startx, self.starty)
             self.game.draw_text("Opciones", 20, self.opcionesx, self.opcionesy)
             self.game.draw_text("Creditos", 20, self.creditsx, self.creditsy)
             self.game.draw_text("Salir", 20, self.salirx, self.saliry)
@@ -119,7 +120,10 @@ class OptionsMenu(Menu):
 
     def check_input(self):
         if self.game.BACK_KEY:
-            self.game.menu_actual = self.game.main_menu
+            if self.game.esMenu=="Iniciar":
+                self.game.menu_actual = self.game.main_menu
+            elif self.game.esMenu=="Continuar":
+                self.game.menu_actual = self.game.pausaMenu
             self.correr_pantalla = False
         elif self.game.UP_KEY or self.game.DOWN_KEY:
             if self.state == 'Volume':
@@ -133,7 +137,11 @@ class OptionsMenu(Menu):
         elif self.game.START_KEY:
             # TO-DO: Create a Volume Menu and a Controls Menu
             # falta crear el menu de volumen y mostrar los controles
-            pass
+            if self.state=='Controls':
+                self.game.menu_actual=self.game.controles
+            self.correr_pantalla = False
+
+            
 
 class CreditsMenu(Menu):
     def __init__(self, game):
@@ -144,7 +152,10 @@ class CreditsMenu(Menu):
         while self.correr_pantalla: #esperamos si se presiona el enter o borrar seteamos el corre_pantalla
             self.game.comprobar_evento()
             if self.game.START_KEY or self.game.BACK_KEY:   # si le damos a enter o a borrar volvemos al menu principal
-                self.game.menu_actual = self.game.main_menu   # volvemos al menu principal
+                if self.game.esMenu=="Iniciar":
+                    self.game.menu_actual = self.game.main_menu
+                elif self.game.esMenu=="Continuar":
+                    self.game.menu_actual = self.game.pausaMenu   # volvemos al menu principal
                 self.correr_pantalla = False    # seteamos la variable para salir del bucle
             self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
             self.game.draw_text('Creditos', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 20)  #mostramos el titulo del menu
@@ -154,10 +165,114 @@ class CreditsMenu(Menu):
             self.game.draw_text('Fernando Scroppo', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 70) #mostramos la persona
 
             self.blit_screen()
-
 class SalirMenu(Menu):
     def __init__(self, game):
         Menu.__init__(self, game)
 
     def display_menu(self):
         self.game.funcionando=False
+
+
+class PausaMenu(MainMenu):
+    def __init__(self, game):
+        MainMenu.__init__(self,game)
+        self.partida="Continuar"
+
+class ControlesMenu(OptionsMenu):
+    def __init__(self, game):
+        OptionsMenu.__init__(self,game)
+    
+    def display_menu(self):
+        self.correr_pantalla = True
+        while self.correr_pantalla: #esperamos si se presiona el enter o borrar seteamos el corre_pantalla
+            self.game.comprobar_evento()
+            if self.game.START_KEY or self.game.BACK_KEY:   # si le damos a enter o a borrar volvemos al menu principal
+                if self.game.esMenu=="Iniciar":
+                    self.game.menu_actual = self.game.main_menu
+                elif self.game.esMenu=="Continuar":
+                    self.game.menu_actual = self.game.pausaMenu   # volvemos al menu principal
+                self.correr_pantalla = False    # seteamos la variable para salir del bucle
+            self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
+            self.game.draw_text('Controles', 20, self.game.ANCHO / 2, 67)  #mostramos el titulo del menu
+            self.game.draw_text('Salir', 15, 203,183) #mostramos la persona
+            self.game.draw_text('Atras', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 30) #mostramos la persona 
+            self.game.draw_text('Pausa', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 50) #mostramos la persona
+            self.game.draw_text('yo que se', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 70) #mostramos la persona
+
+            self.blit_screen()
+
+# class PausaMenu(Menu):
+#     def __init__(self, game):
+#         Menu.__init__(self, game)
+#         self.state = "Continuar"    #ponemos el estado en start para el comienzo del menu
+#         self.continuarx, self.continuary = self.mitad_ancho, self.mitad_alto + 30  # posicionamos el x y el y de start
+#         self.opcionesx, self.opcionesy = self.mitad_ancho, self.mitad_alto + 50  #hacemos lo mismo que lo de arriba pero sumandole 20 a la altura
+#         self.creditsx, self.creditsy = self.mitad_ancho, self.mitad_alto + 70  #lo mismo que antes
+#         self.salirx, self.saliry = self.mitad_ancho, self.mitad_alto + 90
+#         self.cursor_rect.midtop = (self.continuarx + self.offset, self.continuary)  #dibujamos el asterisco de la izquierda 
+#         self.cursor_rectDer.midtop = (self.continuarx + self.offder,self.continuary) #dibujamos el asterisco de la izquierda
+#     def display_menu(self):
+#         self.correr_pantalla = True
+#         pygame.mixer.music.load('Sonidos/pokemon.mp3')
+#         pygame.mixer.music.set_volume(0.1)
+#         pygame.mixer.music.play(1)
+#         while self.correr_pantalla:
+#             self.game.comprobar_evento()    #comprobamos si se presiono una tecla o la x de la ventana para salir
+#             self.check_input()
+#             self.game.pantalla.fill(self.game.Negro)
+#             self.game.draw_text('Menu principal', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 20)
+#             self.game.draw_text("Continuar", 20, self.continuarx, self.continuary)
+#             self.game.draw_text("Opciones", 20, self.opcionesx, self.opcionesy)
+#             self.game.draw_text("Creditos", 20, self.creditsx, self.creditsy)
+#             self.game.draw_text("Salir", 20, self.salirx, self.saliry)
+#             self.draw_cursor()
+#             self.blit_screen()
+
+#     def move_cursor(self):  #esta funcion dibujamos el asterisco
+#         if self.game.DOWN_KEY:  #preguntamos si apretamos la flecha de abajo
+#             if self.state == 'Continuar':   #si la presinamos y el estado es Continuar dibujamos el asterisco en opciones
+#                 self.cursor_rect.midtop = (self.opcionesx + self.offset, self.opcionesy)
+#                 self.cursor_rectDer.midtop = (self.opcionesx + self.offder, self.opcionesy)
+#                 self.state = 'Options'  # cambiamos el estado a opciones
+#             elif self.state == 'Options':   
+#                 self.cursor_rect.midtop = (self.creditsx + self.offset, self.creditsy)
+#                 self.cursor_rectDer.midtop = (self.creditsx + self.offder, self.creditsy)
+#                 self.state = 'Credits'
+#             elif self.state == 'Credits':
+#                 self.cursor_rect.midtop = (self.salirx + self.offset, self.saliry)
+#                 self.cursor_rectDer.midtop = (self.salirx + self.offder, self.saliry)
+#                 self.state = 'Salir'
+#             elif self.state == 'Salir':
+#                 self.cursor_rect.midtop = (self.continuarx + self.offset, self.continuary)
+#                 self.cursor_rectDer.midtop = (self.continuarx + self.offder, self.continuary)
+#                 self.state = 'Continuar'
+#         elif self.game.UP_KEY:  #preguntamos si apretamos la flecha de arriba
+#             if self.state == 'Continuar':
+#                 self.cursor_rect.midtop = (self.salirx + self.offset, self.saliry)
+#                 self.cursor_rectDer.midtop = (self.salirx + self.offder, self.saliry)
+#                 self.state = 'Salir'
+#             elif self.state == 'Options':
+#                 self.cursor_rect.midtop = (self.continuarx + self.offset, self.continuary)
+#                 self.cursor_rectDer.midtop = (self.continuarx + self.offder, self.continuary)
+#                 self.state = 'Continuar'
+#             elif self.state == 'Credits':
+#                 self.cursor_rect.midtop = (self.opcionesx + self.offset, self.opcionesy)
+#                 self.cursor_rectDer.midtop = (self.opcionesx + self.offder, self.opcionesy)
+#                 self.state = 'Options'
+#             elif self.state == 'Salir':
+#                 self.cursor_rect.midtop = (self.creditsx + self.offset, self.creditsy)
+#                 self.cursor_rectDer.midtop = (self.creditsx + self.offder, self.creditsy)
+#                 self.state = 'Credits'
+
+#     def check_input(self):
+#         self.move_cursor()  #dibujamos el asterisco en la posicion a medida que vamos subiendo o bajando
+#         if self.game.START_KEY: #si apretamos la tecla enter ingresamos a start, opciones, creditos o salir.
+#             if self.state == 'Continuar': #si el estado es start jugando es igual a true  
+#                 self.game.jugando= True
+#             elif self.state == 'Options':   #sino preguntamos si el estado es options 
+#                 self.game.menu_actual = self.game.options #ingresamos al menu de opciones
+#             elif self.state == 'Credits':   #sino preguntamos si el estado es credits
+#                 self.game.menu_actual = self.game.credits #ingresamos al menu de creditos
+#             elif self.state == 'Salir':
+#                 self.game.menu_actual = self.game.salir
+#             self.correr_pantalla = False
