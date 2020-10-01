@@ -33,7 +33,7 @@ class MainMenu(Menu):
     def display_menu(self):
         self.correr_pantalla = True
         pygame.mixer.music.load('Sonidos/pokemon.mp3')
-        pygame.mixer.music.set_volume(0.1)
+        pygame.mixer.music.set_volume(0.01)
         pygame.mixer.music.play(1)
         while self.correr_pantalla:
             self.game.comprobar_evento()    #comprobamos si se presiono una tecla o la x de la ventana para salir
@@ -105,9 +105,11 @@ class OptionsMenu(Menu):
         self.controlsx, self.controlsy = self.mitad_ancho, self.mitad_alto + 40
         self.cursor_rect.midtop = (self.volx + self.offset, self.voly)  #dibujamos el cursor de la izquierda
         self.cursor_rectDer.midtop = (self.volx + self.offder, self.voly)   #dibujamos el cursor de la derecha
+        self.atrasx, self.atrasy = self.game.ANCHO / 2, self.controlsy + 20
 
     def display_menu(self):
         self.correr_pantalla = True
+
         while self.correr_pantalla:
             self.game.comprobar_evento()
             self.check_input()
@@ -115,31 +117,52 @@ class OptionsMenu(Menu):
             self.game.draw_text('Options', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 30)
             self.game.draw_text("Volume", 15, self.volx, self.voly)
             self.game.draw_text("Controls", 15, self.controlsx, self.controlsy)
+            self.game.draw_text("ATRAS", 15, self.game.ANCHO / 2, self.controlsy + 20) 
             self.draw_cursor()
             self.blit_screen()
 
-    def check_input(self):
-        if self.game.BACK_KEY:
-            if self.game.esMenu=="Iniciar":
-                self.game.menu_actual = self.game.main_menu
-            elif self.game.esMenu=="Continuar":
-                self.game.menu_actual = self.game.pausaMenu
+    def check_input(self): #Dibujar los asteriscos a los costados.
+        
+        if self.game.START_KEY: #Tecla enter
+            if self.state=="Atras":
+                if self.game.esMenu=="Iniciar":
+                    self.game.menu_actual = self.game.main_menu
+                elif self.game.esMenu=="Continuar":
+                    self.game.menu_actual = self.game.pausaMenu    
+            elif self.state=='Controls':
+                self.game.menu_actual=self.game.controles
             self.correr_pantalla = False
-        elif self.game.UP_KEY or self.game.DOWN_KEY:
-            if self.state == 'Volume':
-                self.state = 'Controls'
-                self.cursor_rect.midtop = (self.controlsx + self.offset, self.controlsy)
-                self.cursor_rectDer.midtop = (self.controlsx + self.offder, self.controlsy)
+
+        elif self.game.UP_KEY: #Tecla para ir para arriba
+            if self.state == 'Volume': #Para saber en que opcion estas parado.
+                self.state = 'Atras'
+                self.cursor_rect.midtop = (self.atrasx + self.offset, self.atrasy)
+                self.cursor_rectDer.midtop = (self.atrasx + self.offder, self.atrasy)
             elif self.state == 'Controls':
                 self.state = 'Volume'
                 self.cursor_rect.midtop = (self.volx + self.offset, self.voly)
                 self.cursor_rectDer.midtop = (self.volx + self.offder, self.voly)
-        elif self.game.START_KEY:
-            # TO-DO: Create a Volume Menu and a Controls Menu
-            # falta crear el menu de volumen y mostrar los controles
-            if self.state=='Controls':
-                self.game.menu_actual=self.game.controles
-            self.correr_pantalla = False
+            elif self.state == 'Atras':
+                self.state = 'Controls'
+                self.cursor_rect.midtop = (self.controlsx + self.offset, self.controlsy)
+                self.cursor_rectDer.midtop = (self.controlsx + self.offder, self.controlsy)
+                
+        elif self.game.DOWN_KEY: #Tecla para ir para abajo
+            if self.state == 'Volume': #Para saber en que opcion estas parado.
+                self.state = 'Controls'
+                self.cursor_rect.midtop = (self.controlsx + self.offset, self.controlsy)
+                self.cursor_rectDer.midtop = (self.controlsx + self.offder, self.controlsy)
+            elif self.state == 'Controls':
+                self.state = 'Atras'
+                self.cursor_rect.midtop = (self.atrasx + self.offset, self.atrasy)
+                self.cursor_rectDer.midtop = (self.atrasx + self.offder, self.atrasy)
+            elif self.state == 'Atras':
+                self.state = 'Volume'
+                self.cursor_rect.midtop = (self.volx + self.offset, self.voly)
+                self.cursor_rectDer.midtop = (self.volx + self.offder, self.voly)
+
+        
+            
 
             
 
@@ -181,24 +204,23 @@ class PausaMenu(MainMenu):
 class ControlesMenu(OptionsMenu):
     def __init__(self, game):
         OptionsMenu.__init__(self,game)
-    
+        self.cursor_rect.midtop = (self.game.ANCHO / 2 + self.offset, self.game.LARGO / 2 + 120)  #dibujamos el cursor de la izquierda
+        self.cursor_rectDer.midtop = (self.game.ANCHO / 2 + self.offder, self.game.LARGO / 2 + 120)   #dibujamos el cursor de la derecha
+
     def display_menu(self):
         self.correr_pantalla = True
         while self.correr_pantalla: #esperamos si se presiona el enter o borrar seteamos el corre_pantalla
             self.game.comprobar_evento()
-            if self.game.START_KEY or self.game.BACK_KEY:   # si le damos a enter o a borrar volvemos al menu principal
-                if self.game.esMenu=="Iniciar":
-                    self.game.menu_actual = self.game.main_menu
-                elif self.game.esMenu=="Continuar":
-                    self.game.menu_actual = self.game.pausaMenu   # volvemos al menu principal
+            if self.game.START_KEY:  # si le damos a enter volvemos al menu principal
+            #    """  if self.game.esMenu=="Iniciar":
+                self.game.menu_actual = self.game.options
+            #     elif self.game.esMenu=="Continuar":
+            #         self.game.menu_actual = self.game.pausaMenu """   # volvemos al menu principal
                 self.correr_pantalla = False    # seteamos la variable para salir del bucle
             self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
             self.game.draw_text('Controles', 20, self.game.ANCHO / 2, 67)  #mostramos el titulo del menu
-            self.game.draw_text('Salir', 15, 203,183) #mostramos la persona
-            self.game.draw_text('Atras', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 30) #mostramos la persona 
-            self.game.draw_text('Pausa', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 50) #mostramos la persona
-            self.game.draw_text('yo que se', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 70) #mostramos la persona
-
+            self.game.draw_text('ATRAS', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 120) 
+            self.draw_cursor()
             self.blit_screen()
 
 # class PausaMenu(Menu):
