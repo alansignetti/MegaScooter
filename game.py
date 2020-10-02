@@ -40,7 +40,7 @@ class Game():
         self.cuentaPasos = 0
         self.contadorVelocidad =0
         self.puntos=0
-        self.cuentaSalto = 13
+        self.cuentaSalto = 10
         self.px = 0
         self.py=500
         self.tam_fuente_puntos=25
@@ -104,12 +104,12 @@ class Game():
                     self.salto = True
                     self.cuentaPasos = 0
             else:
-                if self.cuentaSalto >= -13:
+                if self.cuentaSalto >= -10:
                     self.py -= (self.cuentaSalto * abs(self.cuentaSalto)) * 0.2
                     self.cuentaSalto -= 1
                    
                 else:
-                    self.cuentaSalto = 13
+                    self.cuentaSalto = 10
                     self.salto = False
 
 
@@ -276,8 +276,8 @@ class Game():
 
 
     def colisiones (self):
-     
-       if self.xobstaculo >5 and self.xobstaculo <180 and self.py>480 and self.py<501: # and self.py>499 and self.py<1000
+       print(self.py)
+       if self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501: # and self.py>499 and self.py<1000
             self.perder=True
             while self.perder:
                 for event in pygame.event.get():
