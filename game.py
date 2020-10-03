@@ -2,6 +2,7 @@
 import pygame,sys
 from pygame.locals import *
 from menu import *
+import os
 
 
 class Game():
@@ -12,7 +13,7 @@ class Game():
         
     def reiniciar_juego(self):
         self.funcionando, self.jugando = True, False
-        self.Color,self.Verde,self.Gris,self.Amarillo,self.Azul,self.Blanco,self.Negro=(70,80,150),(0, 255, 126),(165, 172, 171),(243, 254, 0),(0, 51, 254),(255, 255, 255),(0,0,0)
+        self.Color,self.Verde,self.Gris,self.Amarillo,self.Azul,self.Blanco,self.Negro,self.Rojo=(70,80,150),(0, 255, 126),(165, 172, 171),(243, 254, 0),(0, 51, 254),(255, 255, 255),(0,0,0),(248,25,25)
         self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY, self.ESCAPE_KEY,self.P_KEY = False,False, False, False, False, False
         #self.ANCHO,self.LARGO=1280,720
         #self.pantalla = pygame.Surface((self.ANCHO,self.LARGO))
@@ -151,22 +152,35 @@ class Game():
             pygame.display.update()
             self.reloj.tick(self.FPS)
 
+
+
+# FUNCIONES PARA GUARDAR Y REESCRIBIR EL PUNTAJE DEL JUGADOR -------------------------------------------------------------------------------------------
+
     def update_score(self,puntos):
-        
+
+        if os.stat("highscore.txt").st_size == 0: # Este if escribe un numero, si esta completamente vacio el .txt .
+            f = open ('highscore.txt','w')
+            f.write('0')
+            f.close()
+          
+
         self.score = self.max_score()
 
-        with open('highscore.txt', 'w') as f:
+        with open('highscore.txt', 'w') as f:          
             if int(self.score) > self.puntos:
                 f.write(str(self.score))
             else:
                 f.write(str(puntos))
+        f.close()
     def max_score(self):
         with open('highscore.txt', 'r') as f:
             lines = f.readlines()
             score = lines[0].strip()
+        f.close()
 
         return score
     
+ #-------------------------------------------------------------------------------------------------------------------------------------------------------
 
     def mute(self):
         pygame.mixer.music.pause()
@@ -294,8 +308,8 @@ class Game():
 
 
     def colisiones (self):
-       self.max_score()
-       self.update_score()
+       
+       self.update_score(self.puntos)
     #    print(self.score)
        if self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501: # and self.py>499 and self.py<1000
             self.perder=True
@@ -313,16 +327,27 @@ class Game():
                 fuentePerder=pygame.font.Font(self.fuente_Puntuacion,self.tam_fuente_puntos)
 
                 
+
                 
                 
                 
                 # dibuja el rectángulo
                 pygame.draw.rect(self.ventana,self.Negro, pygame.Rect((590,350, 200, 50)),0)    #pygame.Rect (x,y,ancho,alto) dibujar un rectangulo
                 pygame.draw.rect(self.ventana,self.Negro, pygame.Rect((515,500, 350, 70)),0)
+                
                 texto_de_pausa=fuentePerder.render("Perdiste",True,self.Blanco)
                 texto_de_pausa_2 = fuentePerder.render("Presiona P para",True,self.Blanco)
                 texto_de_pausa_3 = fuentePerder.render("*REINTENTAR*",True,self.Blanco)
-                self.ventana.blit(texto_de_pausa,(600,360))
+
+                # Condicional que va a mostrar un texto en pantalla cuando el jugador, rompa su record actual.
+                t_record = self.max_score() # Tomamos el record actual del jugador.
+                if self.puntos >= int(t_record): # Si el ultimo record guardado, es mayor al puntaje actual, se muestra este mensaje. 
+                    pygame.draw.rect(self.ventana,self.Rojo, pygame.Rect((490,420, 400, 40)),0)
+                    nuevo_record = fuentePerder.render("Nuevo Record " + str(self.puntos),True,self.Blanco)
+                    self.ventana.blit(nuevo_record,(510,425))
+
+
+                self.ventana.blit(texto_de_pausa,(600,360))  # Para mostrar los texto en pantalla
                 self.ventana.blit(texto_de_pausa_2,(520,500))
                 self.ventana.blit(texto_de_pausa_3,(560,540))
                 pygame.display.update()

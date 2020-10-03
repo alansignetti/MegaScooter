@@ -1,4 +1,6 @@
 import pygame
+from game import *
+import os
 
 class Menu():
     def __init__(self, game):
@@ -27,20 +29,33 @@ class MainMenu(Menu):
         self.opcionesx, self.opcionesy = self.mitad_ancho, self.mitad_alto + 50  #hacemos lo mismo que lo de arriba pero sumandole 20 a la altura
         self.creditsx, self.creditsy = self.mitad_ancho, self.mitad_alto + 70  #lo mismo que antes
         self.salirx, self.saliry = self.mitad_ancho, self.mitad_alto + 90
+        self.recordx, self.recordy = self.mitad_ancho, self.mitad_alto + 130
         self.cursor_rect.midtop = (self.startx + self.offset, self.starty)  #dibujamos el asterisco de la izquierda 
         self.cursor_rectDer.midtop = (self.startx + self.offder,self.starty) #dibujamos el asterisco de la izquierda
         self.partida="Iniciar Partida"
+        self.numero =0
     def display_menu(self):
         self.correr_pantalla = True
         pygame.mixer.music.load('Sonidos/pokemon.mp3')
         pygame.mixer.music.set_volume(0.01)
         pygame.mixer.music.play(1)
+
+        #Obtenemos el record actual del jugador del "highscore.txt para poder mostrarlo en la pantalla principal"
+
+        if os.stat("highscore.txt").st_size == 0:
+            self.numero = 0 
+        else:
+            self.numero = self.game.max_score() #Obtenemos el record actual del usuario.
+
+        #---------------------------------------------------------------------------------------------------------
+
         while self.correr_pantalla:
             self.game.comprobar_evento()    #comprobamos si se presiono una tecla o la x de la ventana para salir
             self.check_input()
             self.game.pantalla.fill(self.game.Negro)
             self.game.draw_text('Menu principal', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 20)
             self.game.draw_text(self.partida, 20, self.startx, self.starty)
+            self.game.draw_text("Record Actual " + str(self.numero), 25, self.recordx, self.recordy) #Mostramos el record actual.
             self.game.draw_text("Opciones", 20, self.opcionesx, self.opcionesy)
             self.game.draw_text("Creditos", 20, self.creditsx, self.creditsy)
             self.game.draw_text("Salir", 20, self.salirx, self.saliry)
