@@ -28,7 +28,6 @@ class Game():
         self.xPiso=0       
         self.xFondo=0
         self.numeroVelocidad=15
-        self.puntos=0
         self.xobstaculo = 1280
         self.yobstaculo = 540
         self.resta=15
@@ -40,6 +39,8 @@ class Game():
         self.cuentaPasos = 0
         self.contadorVelocidad =0
         self.puntos=0
+        self.highscore=0
+        self.score=0
         self.cuentaSalto = 10
         self.px = 0
         self.py=500
@@ -122,6 +123,7 @@ class Game():
             self.movimiento_moto()
             self.puntuacion()
             self.colisiones()
+            
             #self.ventana.blit(self.Marcador,(self.xobstaculo,self.yobstaculo))
             
 
@@ -134,8 +136,7 @@ class Game():
                 self.contadorVelocidad  = 0 
             
             
-            if(self.contadorVelocidad %100==0): #estaba en 200, que cambia??
-                self.puntos+=1
+
                 #self.cambiarObstaculo= 1
             if self.contadorObstaculo>400:
                 self.cambiarObstaculo= 0
@@ -143,13 +144,30 @@ class Game():
 
 
             #contador de puntos --cuanto mas alto sea el numero del multiplo mas lento suma los puntos
-            if(self.contadorVelocidad%9==0):
+            if(self.contadorVelocidad%5==0):
                 self.puntos+=1
 
             self.reiniciar_tecla()
             pygame.display.update()
             self.reloj.tick(self.FPS)
+
+    def update_score(self,puntos):
+        
+        self.score = self.max_score()
+
+        with open('highscore.txt', 'w') as f:
+            if int(self.score) > self.puntos:
+                f.write(str(self.score))
+            else:
+                f.write(str(puntos))
+    def max_score(self):
+        with open('highscore.txt', 'r') as f:
+            lines = f.readlines()
+            score = lines[0].strip()
+
+        return score
     
+
     def mute(self):
         pygame.mixer.music.pause()
     
@@ -276,7 +294,9 @@ class Game():
 
 
     def colisiones (self):
-       print(self.py)
+       self.max_score()
+       self.update_score()
+    #    print(self.score)
        if self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501: # and self.py>499 and self.py<1000
             self.perder=True
             while self.perder:
