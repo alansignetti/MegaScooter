@@ -266,7 +266,7 @@ class MapasMenu(Menu):
             self.game.draw_text('Mapas', 20, self.game.ANCHO / 2, 67)  #mostramos el titulo del menu
             self.game.draw_text('Seleccionar', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 120) 
             self.draw_cursor()
-            self.fondo_previo=pygame.transform.scale(self.fondo_previo,(325,200))
+            self.fondo_previo=pygame.transform.scale(self.fondo_previo,(325,200)) #Achica la imagen del mapa
             self.game.pantalla.blit(self.fondo_previo,(500,200))
             self.blit_screen()
             
@@ -284,16 +284,16 @@ class MapasMenu(Menu):
         elif self.game.RIGHT_KEY or self.game.LEFT_KEY: 
             if self.state == 'Mapa 1': #Para saber en que opcion estas parado.
                 self.state = 'Mapa 2'
-                self.fondo_previo=pygame.image.load("Imagenes/City1.jpg").convert()
+                self.fondo_previo=pygame.image.load("Imagenes/City1.jpg")
             elif self.state == 'Mapa 2':
                 self.state = 'Mapa 1'
-                self.fondo_previo=pygame.image.load("Imagenes/City3.jpg").convert()
+                self.fondo_previo=pygame.image.load("Imagenes/City3.jpg")
     
     def eleccion(self):
         if self.state == 'Mapa 1':
-            self.mapa=pygame.image.load("Imagenes/City3.jpg").convert()
+            self.mapa=pygame.image.load("Imagenes/City3.jpg")
         elif self.state == 'Mapa 2':
-            self.mapa=pygame.image.load("Imagenes/City1.jpg").convert()
+            self.mapa=pygame.image.load("Imagenes/City1.jpg")
 
 
 

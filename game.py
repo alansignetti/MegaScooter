@@ -56,6 +56,8 @@ class Game():
         self.perder=False
         self.esMenu="Iniciar"
         self.controles=ControlesMenu(self)
+        self.coli= False
+        
         
         
         
@@ -72,7 +74,7 @@ class Game():
     def loop_juego(self):
         if(self.jugando):
             self.mute()
-            pygame.mixer.music.set_volume(0.01)
+            pygame.mixer.music.set_volume(0.04)
             pygame.mixer.music.load('Sonidos/juego.mp3')
             pygame.mixer.music.play(1)
 
@@ -106,6 +108,9 @@ class Game():
             if not (self.salto):
                 if keys[pygame.K_SPACE]:
                     self.salto = True
+                    sonido_salto = pygame.mixer.Sound("Sonidos/sonido_salto.wav")
+                    sonido_salto.play()
+                    sonido_salto.set_volume(0.05)
                     self.cuentaPasos = 0
             else:
                 if self.cuentaSalto >= -10:
@@ -335,14 +340,18 @@ class Game():
                             self.perder=False
                             self.reiniciar_juego()
                             
-                            
+
+                sierra = pygame.image.load("Imagenes/Sierras2.png")
+                self.ventana.blit(sierra,(int(0), int(500)))
+                self.coli = True
+                
+                
+                
+
+
+
                 fuentePerder=pygame.font.Font(self.fuente_Puntuacion,self.tam_fuente_puntos)
 
-                
-
-                
-                
-                
                 # dibuja el rectángulo
                 pygame.draw.rect(self.ventana,self.Negro, pygame.Rect((590,350, 200, 50)),0)    #pygame.Rect (x,y,ancho,alto) dibujar un rectangulo
                 pygame.draw.rect(self.ventana,self.Negro, pygame.Rect((515,500, 350, 70)),0)
@@ -425,6 +434,8 @@ class Game():
         if self.cuentaPasos + 1 >= 4:   #>= 4 porque las fotos del movimiento de la moto son 4.
             self.cuentaPasos = 0
 
+        
+
         #Movimiento hacia adelante acelerando
         if self.acelera:   
             self.ventana.blit(self.acelerando[self.cuentaPasos // 1], (int(self.px), int(self.py)))
@@ -433,6 +444,7 @@ class Game():
         elif self.salto + 1 >= 1:
             self.ventana.blit(self.salta,(int(self.px), int(self.py)))
             self.cuentaPasos += 1
+
 
         else:
             self.ventana.blit(self.quieto,(int(self.px), int(self.py)))
