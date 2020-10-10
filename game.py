@@ -76,7 +76,7 @@ class Game():
             pygame.mixer.music.load('Sonidos/juego.mp3')
             pygame.mixer.music.play(1)
 
-        while self.jugando:
+        while self.jugando and self.mapas.mostrar_menu==False:
             
             self.comprobar_evento()
             if self.ESCAPE_KEY:  #si apretamos enter el juego vuelve al menu
