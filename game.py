@@ -14,16 +14,17 @@ class Game():
     def reiniciar_juego(self):
         self.funcionando, self.jugando = True, False
         self.Color,self.Verde,self.Gris,self.Amarillo,self.Azul,self.Blanco,self.Negro,self.Rojo=(70,80,150),(0, 255, 126),(165, 172, 171),(243, 254, 0),(0, 51, 254),(255, 255, 255),(0,0,0),(248,25,25)
-        self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY, self.ESCAPE_KEY,self.P_KEY = False,False, False, False, False, False
-        #self.ANCHO,self.LARGO=1280,720
-        #self.pantalla = pygame.Surface((self.ANCHO,self.LARGO))
-        #self.ventana=pygame.display.set_mode((self.ANCHO, self.LARGO))
+        self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY, self.ESCAPE_KEY,self.P_KEY,self.RIGHT_KEY,self.LEFT_KEY = False,False, False, False, False, False, False, False
+        self.ANCHO,self.LARGO=1280,720
+        self.pantalla = pygame.Surface((self.ANCHO,self.LARGO))
+        self.ventana=pygame.display.set_mode((self.ANCHO, self.LARGO))
         self.fuente_Puntuacion='fuentes/8-BIT WONDER.TTF'
         self.main_menu = MainMenu(self)
         self.options = OptionsMenu(self)
         self.credits = CreditsMenu(self)
         self.salir = SalirMenu(self)
         self.pausaMenu = PausaMenu(self)
+        self.mapas = MapasMenu(self)
         self.menu_actual = self.main_menu
         self.titulo=pygame.display.set_caption("MegaScooter")
         self.xPiso=0       
@@ -55,6 +56,7 @@ class Game():
         self.perder=False
         self.esMenu="Iniciar"
         self.controles=ControlesMenu(self)
+        
         
         
     pygame.init()
@@ -189,7 +191,7 @@ class Game():
         pygame.mixer.music.unpause()
 
     def reiniciar_tecla(self):
-        self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY, self.ESCAPE_KEY,self.P_KEY = False,False,False, False, False, False
+        self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY, self.ESCAPE_KEY,self.P_KEY,self.RIGHT_KEY,self.LEFT_KEY = False,False,False, False, False, False, False, False
             
 
     
@@ -211,6 +213,10 @@ class Game():
                     self.ESCAPE_KEY= True
                 if event.key == pygame.K_p:
                     self.P_KEY= True
+                if event.key == pygame.K_RIGHT:
+                    self.RIGHT_KEY= True
+                if event.key == pygame.K_LEFT:
+                    self.LEFT_KEY= True
                     
             
     def pausar(self):
@@ -237,7 +243,13 @@ class Game():
 
     def cargar_fondo(self):
         #-----------------------------Fondo----------------------------------------------
-        fondo= pygame.image.load("Imagenes/City3.jpg").convert()
+        
+        # if self.esMenu=="Iniciar": #si empieza a jugar, entonces puedo cambiar el mapa
+        #     self.mapas.eleccion()
+
+        self.mapas.eleccion()
+        
+        fondo=self.mapas.mapa #cargamos el mapa default
         x_rel_Fondo= self.xFondo % fondo.get_rect().width  # Hacemos el valor de "x" dividido "%" el ancho del fondo "fondo.get_rect().width"
         self.ventana.blit(fondo, (x_rel_Fondo - fondo.get_rect().width, 0))
 

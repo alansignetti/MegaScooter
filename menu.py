@@ -30,6 +30,7 @@ class MainMenu(Menu):
         self.creditsx, self.creditsy = self.mitad_ancho, self.mitad_alto + 70  #lo mismo que antes
         self.salirx, self.saliry = self.mitad_ancho, self.mitad_alto + 90
         self.recordx, self.recordy = self.mitad_ancho, self.mitad_alto + 130
+        self.mapasx, self.mapasy = self.mitad_ancho, self.recordy + 20
         self.cursor_rect.midtop = (self.startx + self.offset, self.starty)  #dibujamos el asterisco de la izquierda 
         self.cursor_rectDer.midtop = (self.startx + self.offder,self.starty) #dibujamos el asterisco de la izquierda
         self.partida="Iniciar Partida"
@@ -59,6 +60,7 @@ class MainMenu(Menu):
             self.game.draw_text("Opciones", 20, self.opcionesx, self.opcionesy)
             self.game.draw_text("Creditos", 20, self.creditsx, self.creditsy)
             self.game.draw_text("Salir", 20, self.salirx, self.saliry)
+            self.game.draw_text("Mapas",20, self.mapasx,self.mapasy)
             self.draw_cursor()
             self.blit_screen()
 
@@ -78,14 +80,19 @@ class MainMenu(Menu):
                 self.cursor_rectDer.midtop = (self.salirx + self.offder, self.saliry)
                 self.state = 'Salir'
             elif self.state == 'Salir':
+                self.cursor_rect.midtop = (self.mapasx + self.offset, self.mapasy)
+                self.cursor_rectDer.midtop = (self.mapasx + self.offder, self.mapasy)
+                self.state = 'Mapas'
+            elif self.state == 'Mapas':
                 self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
                 self.cursor_rectDer.midtop = (self.startx + self.offder, self.starty)
                 self.state = 'Start'
+
         elif self.game.UP_KEY:  #preguntamos si apretamos la flecha de arriba
             if self.state == 'Start':
-                self.cursor_rect.midtop = (self.salirx + self.offset, self.saliry)
-                self.cursor_rectDer.midtop = (self.salirx + self.offder, self.saliry)
-                self.state = 'Salir'
+                self.cursor_rect.midtop = (self.mapasx + self.offset, self.mapasy)
+                self.cursor_rectDer.midtop = (self.mapasx + self.offder, self.mapasy)
+                self.state = 'Mapas'
             elif self.state == 'Options':
                 self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
                 self.cursor_rectDer.midtop = (self.startx + self.offder, self.starty)
@@ -98,6 +105,11 @@ class MainMenu(Menu):
                 self.cursor_rect.midtop = (self.creditsx + self.offset, self.creditsy)
                 self.cursor_rectDer.midtop = (self.creditsx + self.offder, self.creditsy)
                 self.state = 'Credits'
+            elif self.state == 'Mapas':
+                self.state = 'Salir'
+                self.cursor_rect.midtop = (self.salirx + self.offset, self.saliry)
+                self.cursor_rectDer.midtop = (self.salirx + self.offder, self.saliry)
+                
 
     def check_input(self):
         self.move_cursor()  #dibujamos el asterisco en la posicion a medida que vamos subiendo o bajando
@@ -110,6 +122,8 @@ class MainMenu(Menu):
                 self.game.menu_actual = self.game.credits #ingresamos al menu de creditos
             elif self.state == 'Salir':
                 self.game.menu_actual = self.game.salir
+            elif self.state == 'Mapas':
+                self.game.menu_actual = self.game.mapas
             self.correr_pantalla = False
 
 class OptionsMenu(Menu):
@@ -222,6 +236,7 @@ class ControlesMenu(OptionsMenu):
         self.cursor_rect.midtop = (self.game.ANCHO / 2 + self.offset, self.game.LARGO / 2 + 120)  #dibujamos el cursor de la izquierda
         self.cursor_rectDer.midtop = (self.game.ANCHO / 2 + self.offder, self.game.LARGO / 2 + 120)   #dibujamos el cursor de la derecha
 
+
     def display_menu(self):
         self.correr_pantalla = True
         while self.correr_pantalla: #esperamos si se presiona el enter o borrar seteamos el corre_pantalla
@@ -238,6 +253,58 @@ class ControlesMenu(OptionsMenu):
             self.draw_cursor()
             self.blit_screen()
 
+
+class MapasMenu(Menu):
+    def __init__(self, game):
+        Menu.__init__(self, game)
+        self.cursor_rect.midtop = (self.game.ANCHO / 2 + self.offset, self.game.LARGO / 2 + 120)  #dibujamos el cursor de la izquierda
+        self.cursor_rectDer.midtop = (self.game.ANCHO / 2 + self.offder, self.game.LARGO / 2 + 120)   #dibujamos el cursor de la derecha
+        self.state="Mapa 1"
+        self.fondo_previo=pygame.image.load("Imagenes/City3.jpg").convert()
+        self.mapa=pygame.image.load("Imagenes/City3.jpg").convert()
+        
+    def display_menu(self):
+        self.correr_pantalla = True
+        self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
+        while self.correr_pantalla: #esperamos si se presiona el enter o borrar seteamos el corre_pantalla
+            self.game.comprobar_evento()
+            self.check_input()
+            self.game.draw_text('Mapas', 20, self.game.ANCHO / 2, 67)  #mostramos el titulo del menu
+            self.game.draw_text('Seleccionar', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 120) 
+            self.draw_cursor()
+            self.fondo_previo=pygame.transform.scale(self.fondo_previo,(325,200))
+            self.game.pantalla.blit(self.fondo_previo,(500,200))
+            self.blit_screen()
+            
+
+    def check_input(self): 
+        
+        if self.game.START_KEY:  # si le damos a enter volvemos al menu principal
+            if self.game.esMenu=="Iniciar":
+                    self.game.menu_actual = self.game.main_menu
+            elif self.game.esMenu=="Continuar":
+                self.game.menu_actual = self.game.pausaMenu   # volvemos al menu principal
+            self.correr_pantalla = False    # seteamos la variable para salir del bucle
+
+        elif self.game.RIGHT_KEY or self.game.LEFT_KEY: 
+            if self.state == 'Mapa 1': #Para saber en que opcion estas parado.
+                self.state = 'Mapa 2'
+                self.fondo_previo=pygame.image.load("Imagenes/City1.jpg").convert()
+            elif self.state == 'Mapa 2':
+                self.state = 'Mapa 1'
+                self.fondo_previo=pygame.image.load("Imagenes/City3.jpg").convert()
+    
+    def eleccion(self):
+        if self.state == 'Mapa 1':
+            self.mapa=pygame.image.load("Imagenes/City3.jpg").convert()
+        elif self.state == 'Mapa 2':
+            self.mapa=pygame.image.load("Imagenes/City1.jpg").convert()
+
+
+
+            
+            
+            
 # class PausaMenu(Menu):
 #     def __init__(self, game):
 #         Menu.__init__(self, game)
