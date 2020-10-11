@@ -72,7 +72,7 @@ class Game():
     #Videos para hacer el fondo y el piso movil https://www.youtube.com/watch?v=Ftln3VrFV6s&list=PLVzwufPir356RMxSsOccc38jmxfxqfBdp&index=4   
 
     def loop_juego(self):
-        if(self.jugando):
+        if(self.jugando and self.mapas.mostrar_menu == False):
             self.mute()
             pygame.mixer.music.set_volume(0.04)
             pygame.mixer.music.load('Sonidos/juego.mp3')
@@ -328,7 +328,13 @@ class Game():
        
        self.update_score(self.puntos)
     #    print(self.score)
+       
        if self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501: # and self.py>499 and self.py<1000
+            self.mute()
+            game_over = pygame.mixer.Sound("Sonidos/GameOver.wav")
+            game_over.play()  
+            game_over.set_volume(0.8)
+
             self.perder=True
             while self.perder:
                 for event in pygame.event.get():
@@ -340,14 +346,11 @@ class Game():
                             self.perder=False
                             self.reiniciar_juego()
                             
-
+                # Imagenes para la explosion
                 sierra = pygame.image.load("Imagenes/Sierras2.png")
                 self.ventana.blit(sierra,(int(0), int(500)))
                 self.coli = True
                 
-                
-                
-
 
 
                 fuentePerder=pygame.font.Font(self.fuente_Puntuacion,self.tam_fuente_puntos)
