@@ -52,11 +52,15 @@ class Game():
         self.cambiarObstaculo=0
         self.contadorObstaculo=0
         self.acelerando = []
+        self.explotando = []
         self.Moto_sprite = pygame.image.load("Imagenes/Moto.png")  
+        self.Img_explosion = pygame.image.load("Imagenes/Explosion-2.png")
         self.perder=False
         self.esMenu="Iniciar"
         self.controles=ControlesMenu(self)
         self.coli= False
+        self.explosion = 0
+
         
         
         
@@ -323,11 +327,30 @@ class Game():
                 self.xobstaculo = 1280 #Cuando el obstaculo llegue a la punta izquierda, setea la variable para ponerlo al principio. 
                 self.resta +=0.5  #En cuanto queres que se incremente cada vez que vuelva a aparecer de vuelta el obstaculo
 
+    def recorte_imagen (self,a,b,c,d,imagen,e):
+
+
+        # self.Moto_sprite.set_clip(pygame.Rect(a,b,c,d))  
+        # Moto_1 = self.Moto_sprite.subsurface(self.Moto_sprite.get_clip())
+        # Ancho_moto = Moto_1.get_size()
+        # MotoBig = pygame.transform.scale(Moto_1,(int(Ancho_moto[0]*2),(Ancho_moto[1]*2)))
+        # return MotoBig
+    
+        imagen.set_clip(pygame.Rect(a,b,c,d))  
+        MotoBig = imagen.subsurface(imagen.get_clip())
+        
+        if e==2: #Este es para que duplique el tamaño de la imagen, que se pasa
+            Ancho_moto = MotoBig.get_size()
+            MotoBig = pygame.transform.scale(MotoBig,(int(Ancho_moto[0]*2),(Ancho_moto[1]*2)))
+        return MotoBig
+
+
 
     def colisiones (self):
        
+       
        self.update_score(self.puntos)
-    #    print(self.score)
+       #print(self.score)
        
        if self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501: # and self.py>499 and self.py<1000
             self.mute()
@@ -346,9 +369,29 @@ class Game():
                             self.perder=False
                             self.reiniciar_juego()
                             
+                # Vector para recorrer la imagen explosion
+                self.explotando= [
+                                self.recorte_imagen(215,35,135,125,self.Img_explosion,1),
+                                self.recorte_imagen(392,15,185,158,self.Img_explosion,1),
+                                self.recorte_imagen(577,0,190,185,self.Img_explosion,1) # pygame.transform.scale(,(int(Ancho_moto[0]*2),(Ancho_moto[1]*2)))
+                            
+                    ]
+
+                ancho_explosion = self.explotando[2].get_size() 
+                self.explotando[2]=pygame.transform.scale(self.explotando[2],(int(ancho_explosion[0]*2-130),(ancho_explosion[1]*2-210)))  #Correcion de la ultima explocion        
+
+
+                while self.explosion<3:    
+                    self.ventana.blit(self.explotando[self.explosion], (int(self.px-5), int(self.py))) 
+                    print(self.explosion)
+                    self.explosion += 1    
+                    pygame.time.wait(40)  
+                    pygame.display.update()
+
+
                 # Imagenes para la explosion
-                sierra = pygame.image.load("Imagenes/Sierras2.png")
-                self.ventana.blit(sierra,(int(0), int(500)))
+                # img_explosion_recorte=self.recorte_imagen(215,35,135,125,self.Img_explosion,1)  #Coordenada x, corrdenada y, ancho y alto
+                # self.ventana.blit(img_explosion_recorte,(int(0), int(500)))
                 self.coli = True
                 
 
@@ -392,15 +435,6 @@ class Game():
 
 
     
-    def recorte_imagen (self,a,b,c,d,imagen):
-
-
-        self.Moto_sprite.set_clip(pygame.Rect(a,b,c,d))  
-        Moto_1 = self.Moto_sprite.subsurface(self.Moto_sprite.get_clip())
-        Ancho_moto = Moto_1.get_size()
-        MotoBig = pygame.transform.scale(Moto_1,(int(Ancho_moto[0]*2),(Ancho_moto[1]*2)))
-        return MotoBig
-    
     
 
 
@@ -423,10 +457,10 @@ class Game():
         #global Moto_sprite = pygame.image.load("Imagenes/Moto.png")
 
         self.acelerando = [
-                            self.recorte_imagen(0,115,106,62,self.Moto_sprite),
-                            self.recorte_imagen(106,115,105,57,self.Moto_sprite),
-                            self.recorte_imagen(213,115,105,57,self.Moto_sprite),
-                            self.recorte_imagen(318,115,105,57,self.Moto_sprite)  
+                            self.recorte_imagen(0,115,106,62,self.Moto_sprite,2),
+                            self.recorte_imagen(106,115,105,57,self.Moto_sprite,2),
+                            self.recorte_imagen(213,115,105,57,self.Moto_sprite,2),
+                            self.recorte_imagen(318,115,105,57,self.Moto_sprite,2)  
                     ]
 
 
