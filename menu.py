@@ -191,6 +191,8 @@ class OptionsMenu(Menu):
 class CreditsMenu(Menu):
     def __init__(self, game):
         Menu.__init__(self, game)
+        self.cursor_rect.midtop = (self.game.ANCHO / 2 + self.offset, self.game.LARGO / 2 + 120)  #dibujamos el cursor de la izquierda
+        self.cursor_rectDer.midtop = (self.game.ANCHO / 2 + self.offder, self.game.LARGO / 2 + 120)   #dibujamos el cursor de la derecha
 
     def display_menu(self):
         self.correr_pantalla = True
@@ -208,7 +210,8 @@ class CreditsMenu(Menu):
             self.game.draw_text('Cristian Scarella', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 30) #mostramos la persona 
             self.game.draw_text('Yago Rexach', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 50) #mostramos la persona
             self.game.draw_text('Fernando Scroppo', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 70) #mostramos la persona
-
+            self.game.draw_text('ATRAS', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 120) 
+            self.draw_cursor()
             self.blit_screen()
 class SalirMenu(Menu):
     def __init__(self, game):
@@ -226,8 +229,8 @@ class PausaMenu(MainMenu):
 class ControlesMenu(OptionsMenu):
     def __init__(self, game):
         OptionsMenu.__init__(self,game)
-        self.cursor_rect.midtop = (self.game.ANCHO / 2 + self.offset, self.game.LARGO / 2 + 120)  #dibujamos el cursor de la izquierda
-        self.cursor_rectDer.midtop = (self.game.ANCHO / 2 + self.offder, self.game.LARGO / 2 + 120)   #dibujamos el cursor de la derecha
+        self.cursor_rect.midtop = (self.game.ANCHO / 2 + self.offset, self.game.LARGO / 2 + 150)  #dibujamos el cursor de la izquierda
+        self.cursor_rectDer.midtop = (self.game.ANCHO / 2 + self.offder, self.game.LARGO / 2 + 150)   #dibujamos el cursor de la derecha
 
 
     def display_menu(self):
@@ -242,7 +245,39 @@ class ControlesMenu(OptionsMenu):
                 self.correr_pantalla = False    # seteamos la variable para salir del bucle
             self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
             self.game.draw_text('Controles', 20, self.game.ANCHO / 2, 67)  #mostramos el titulo del menu
-            self.game.draw_text('ATRAS', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 120) 
+            self.game.draw_text('ATRAS', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 150) 
+
+            # Cargamos las imagenes de los controles y describimos sus funciones
+
+            #Configuracion de la tecla enter
+            T_enter = pygame.image.load("Imagenes/t_enter.png")
+            T_enter = pygame.transform.scale(T_enter,(64,64))
+            self.game.pantalla.blit(T_enter,(435,130)) #Posicion de la tecla
+            self.game.draw_text('Selecionar Opcion', 19,660, 161)  #Accion de la tecla
+            
+            #Configuracion del espacio
+            T_espacio = pygame.image.load("Imagenes/T_espacio.png")
+            T_espacio = pygame.transform.scale(T_espacio,(107,65))
+            self.game.pantalla.blit(T_espacio,(395,200))
+            self.game.draw_text('Saltar', 19,570, 230)
+
+            #Configuracion de la tecla escape
+            T_escape = pygame.image.load("Imagenes/T_escape.png")
+            self.game.pantalla.blit(T_escape,(442,270))
+            self.game.draw_text('Menu de pausa', 19,635, 300)
+
+            #Configuracion de la tecla p
+            T_p = pygame.image.load("Imagenes/T_p.png")
+            self.game.pantalla.blit(T_p,(442,340))
+            self.game.draw_text('Pausa / Reintentar', 19,670, 370)
+
+            #Configuracion de las flechas de seleccion
+            t_flechas = pygame.image.load("Imagenes/flechas_navegacion.png")
+            self.game.pantalla.blit(t_flechas,(442,410))
+            self.game.draw_text('Flechas de navegacion', 19,700, 440)
+
+
+
             self.draw_cursor()
             self.blit_screen()
 
