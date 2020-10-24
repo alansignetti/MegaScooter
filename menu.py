@@ -118,6 +118,7 @@ class MainMenu(Menu):
             elif self.state == 'Mapas':
                 self.game.menu_actual = self.game.mapas
             self.correr_pantalla = False
+            
 
 class OptionsMenu(Menu):
     def __init__(self, game):
@@ -136,9 +137,9 @@ class OptionsMenu(Menu):
             self.game.comprobar_evento()
             self.check_input()
             self.game.pantalla.fill((0, 0, 0))
-            self.game.draw_text('Options', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 30)
-            self.game.draw_text("Volume", 15, self.volx, self.voly)
-            self.game.draw_text("Controls", 15, self.controlsx, self.controlsy)
+            self.game.draw_text('Opciones', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 30)
+            self.game.draw_text("Volumen", 15, self.volx, self.voly)
+            self.game.draw_text("Controles", 15, self.controlsx, self.controlsy)
             self.game.draw_text("ATRAS", 15, self.game.ANCHO / 2, self.controlsy + 20) 
             self.draw_cursor()
             self.blit_screen()
@@ -153,6 +154,8 @@ class OptionsMenu(Menu):
                     self.game.menu_actual = self.game.pausaMenu    
             elif self.state=='Controls':
                 self.game.menu_actual=self.game.controles
+            elif self.state == 'Volume':
+                self.game.menu_actual = self.game.volumen #Ingresamos al menu, del volumen?
             self.correr_pantalla = False
 
         elif self.game.UP_KEY: #Tecla para ir para arriba
@@ -184,8 +187,6 @@ class OptionsMenu(Menu):
                 self.cursor_rectDer.midtop = (self.volx + self.offder, self.voly)
 
         
-            
-
             
 
 class CreditsMenu(Menu):
@@ -225,6 +226,33 @@ class PausaMenu(MainMenu):
     def __init__(self, game):
         MainMenu.__init__(self,game)
         self.partida="Continuar"
+
+
+class VolumenMenu(OptionsMenu):
+    def __init__(self, game):
+        OptionsMenu.__init__(self,game)
+        self.cursor_rect.midtop = (self.game.ANCHO / 2 + self.offset, self.game.LARGO / 2 + 150)  #dibujamos el cursor de la izquierda
+        self.cursor_rectDer.midtop = (self.game.ANCHO / 2 + self.offder, self.game.LARGO / 2 + 150)   #dibujamos el cursor de la derecha
+
+
+    def display_menu(self):
+        self.correr_pantalla = True
+        while self.correr_pantalla: #esperamos si se presiona el enter o borrar seteamos el corre_pantalla
+            self.game.comprobar_evento()
+            if self.game.START_KEY:  # si le damos a enter volvemos al menu principal
+            #    """  if self.game.esMenu=="Iniciar":
+                self.game.menu_actual = self.game.options
+            #     elif self.game.esMenu=="Continuar":
+            #         self.game.menu_actual = self.game.pausaMenu """   # volvemos al menu principal
+                self.correr_pantalla = False    # seteamos la variable para salir del bucle
+            self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
+            self.game.draw_text('Volumen', 20, self.game.ANCHO / 2, 67)  #mostramos el titulo del menu
+            self.game.draw_text('ATRAS', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 150) 
+
+            self.draw_cursor()
+            self.blit_screen()
+
+
 
 class ControlesMenu(OptionsMenu):
     def __init__(self, game):

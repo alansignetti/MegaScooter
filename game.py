@@ -25,6 +25,7 @@ class Game():
         self.salir = SalirMenu(self)
         self.pausaMenu = PausaMenu(self)
         self.mapas = MapasMenu(self)
+        self.volumen = VolumenMenu(self) # Agregar la pantalla del menu
         self.menu_actual = self.main_menu
         self.titulo=pygame.display.set_caption("MegaScooter")
         self.xPiso=0       
@@ -60,7 +61,7 @@ class Game():
         self.controles=ControlesMenu(self)
         self.coli= False
         self.explosion = 0
-
+        self.sonido= pygame.mixer.Sound("Sonidos/juego_prueba.wav")
         
         
         
@@ -78,9 +79,13 @@ class Game():
     def loop_juego(self):
         if(self.jugando and self.mapas.mostrar_menu == False):
             self.mute()
-            pygame.mixer.music.set_volume(0.04)
-            pygame.mixer.music.load('Sonidos/juego.mp3')
-            pygame.mixer.music.play(1)
+            # pygame.mixer.music.set_volume(0.04)
+            # pygame.mixer.music.load('Sonidos/juego.mp3')
+            # # pygame.mixer.music.play(1)
+            self.sonido.play()
+            self.sonido.set_volume(0.08)    #Nivel 1: 0.04 nivel 2: 0.08  max: 0.1
+            
+            
 
         while self.jugando and self.mapas.mostrar_menu==False:
             
@@ -354,6 +359,7 @@ class Game():
        
        if self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501: # and self.py>499 and self.py<1000
             self.mute()
+            self.sonido.stop() #Cuando colisiona pausamos la musica del juego.
             game_over = pygame.mixer.Sound("Sonidos/GameOver.wav")
             game_over.play()  
             game_over.set_volume(0.8)
