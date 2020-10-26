@@ -353,41 +353,56 @@ class ControlesMenu(OptionsMenu):
 class MapasMenu(Menu):
     def __init__(self, game):
         Menu.__init__(self, game)
-        self.cursor_rect.midtop = (self.game.ANCHO / 2 + self.offset, self.game.LARGO / 2 + 120)  #dibujamos el cursor de la izquierda
-        self.cursor_rectDer.midtop = (self.game.ANCHO / 2 + self.offder, self.game.LARGO / 2 + 120)   #dibujamos el cursor de la derecha
         self.state="Mapa 1"
+        self.opcion= "Seleccionar"
+        self.seleccionarx,self.seleccionary=self.mitad_ancho, self.mitad_alto + 120
+        self.atrasx,self.atrasy=self.mitad_ancho, self.mitad_alto + 140
+        self.cursor_rect.midtop = (self.seleccionarx+ self.offset, self.seleccionary)  #dibujamos el cursor de la izquierda
+        self.cursor_rectDer.midtop = (self.seleccionarx + self.offder, self.seleccionary)   #dibujamos el cursor de la derecha
+
         self.mostrar_menu=True
         self.fondo_previo=pygame.image.load("Imagenes/City3.jpg").convert()
         self.mapa=pygame.image.load("Imagenes/City3.jpg").convert()
         
     def display_menu(self):
         self.correr_pantalla = True
-        self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
+        
         while self.correr_pantalla: #esperamos si se presiona el enter o borrar seteamos el corre_pantalla
             self.game.comprobar_evento()
             self.check_input()
+            self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
             self.game.draw_text('Mapas', 20, self.game.ANCHO / 2, 67)  #mostramos el titulo del menu
             self.game.draw_text('Seleccionar', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 120) 
-            self.draw_cursor()
+            self.game.draw_text('Atras', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 140) 
             self.fondo_previo=pygame.transform.scale(self.fondo_previo,(325,200)) #Achica la imagen del mapa
             self.game.pantalla.blit(self.fondo_previo,(500,200))
+            self.draw_cursor()
             self.blit_screen()
             
 
     def check_input(self): 
         
         if self.game.START_KEY:  # si le damos a enter volvemos al menu principal
-            # if self.game.esMenu=="Iniciar":
-            #         self.game.menu_actual = self.game.main_menu
-            # elif self.game.esMenu=="Continuar":
-            #     self.game.menu_actual = self.game.pausaMenu   # volvemos al menu principal
-            self.mostrar_menu = False
+            if self.opcion == 'Seleccionar': #preguntamos si apretamos enter y seleccionamos el mapa entonces vamos al juego
+                self.mostrar_menu = False
+            if self.opcion == 'Atras': # sino, volvemos al menu principal
+                self.game.menu_actual = self.game.main_menu
             self.correr_pantalla = False    # seteamos la variable para salir del bucle
 
+        elif self.game.UP_KEY or self.game.DOWN_KEY:
+            if self.opcion == 'Seleccionar':
+                self.opcion = 'Atras'
+                self.cursor_rect.midtop = (self.atrasx + self.offset, self.atrasy)
+                self.cursor_rectDer.midtop = (self.atrasx + self.offder, self.atrasy)
+            elif self.opcion == 'Atras':
+                self.opcion = 'Seleccionar'
+                self.cursor_rect.midtop = (self.seleccionarx + self.offset, self.seleccionary)
+                self.cursor_rectDer.midtop = (self.seleccionarx + self.offder, self.seleccionary)
+        
         elif self.game.RIGHT_KEY or self.game.LEFT_KEY: 
             if self.state == 'Mapa 1': #Para saber en que opcion estas parado.
                 self.state = 'Mapa 2'
-                self.fondo_previo=pygame.image.load("Imagenes/City1.jpg")
+                self.fondo_previo=pygame.image.load("Imagenes/City2.jpg")
             elif self.state == 'Mapa 2':
                 self.state = 'Mapa 1'
                 self.fondo_previo=pygame.image.load("Imagenes/City3.jpg")
@@ -396,7 +411,7 @@ class MapasMenu(Menu):
         if self.state == 'Mapa 1':
             self.mapa=pygame.image.load("Imagenes/City3.jpg")
         elif self.state == 'Mapa 2':
-            self.mapa=pygame.image.load("Imagenes/City1.jpg")
+            self.mapa=pygame.image.load("Imagenes/City2.jpg")
 
 
 
