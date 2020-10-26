@@ -233,21 +233,61 @@ class VolumenMenu(OptionsMenu):
         OptionsMenu.__init__(self,game)
         self.cursor_rect.midtop = (self.game.ANCHO / 2 + self.offset, self.game.LARGO / 2 + 150)  #dibujamos el cursor de la izquierda
         self.cursor_rectDer.midtop = (self.game.ANCHO / 2 + self.offder, self.game.LARGO / 2 + 150)   #dibujamos el cursor de la derecha
+        
+        self.V_max = pygame.image.load("Imagenes/vol_3_transparente.png") 
+        self.V_2 = pygame.image.load("Imagenes/vol_2_transparente.png")
+        self.V_1 = pygame.image.load("Imagenes/vol_1_transparente.png")
+        self.V_mute = pygame.image.load("Imagenes/vol_mute.png")
 
+        self.volumen = [
+                self.V_mute,
+                self.V_1,
+                self.V_2,
+                self.V_max
+                    ]
+
+        self.iterador=2
 
     def display_menu(self):
         self.correr_pantalla = True
+        resto = 0.04
+
+        self.game.pantalla.blit(self.volumen[self.iterador],(390,110))  #Imagen por defecto
+
         while self.correr_pantalla: #esperamos si se presiona el enter o borrar seteamos el corre_pantalla
-            self.game.comprobar_evento()
-            if self.game.START_KEY:  # si le damos a enter volvemos al menu principal
-            #    """  if self.game.esMenu=="Iniciar":
-                self.game.menu_actual = self.game.options
-            #     elif self.game.esMenu=="Continuar":
-            #         self.game.menu_actual = self.game.pausaMenu """   # volvemos al menu principal
-                self.correr_pantalla = False    # seteamos la variable para salir del bucle
+            
+
             self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
             self.game.draw_text('Volumen', 20, self.game.ANCHO / 2, 67)  #mostramos el titulo del menu
             self.game.draw_text('ATRAS', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 150) 
+            
+
+
+            self.game.comprobar_evento()
+            if self.game.START_KEY:  # si le damos a enter volvemos al menu principal
+                self.game.menu_actual = self.game.options
+                self.correr_pantalla = False    # seteamos la variable para salir del bucle 
+
+            elif self.game.LEFT_KEY and self.game.sonido.get_volume()>0:
+                redondeo_volumen_actual = round(self.game.sonido.get_volume(),2)  #Obtenemos 
+                round_resta = round ((redondeo_volumen_actual - resto),2)
+                self.game.sonido.set_volume(round_resta)
+                self.iterador = self.iterador-1
+                
+
+            elif self.game.RIGHT_KEY and round(self.game.sonido.get_volume(),2) <0.12:
+                redondeo_volumen_actual = round(self.game.sonido.get_volume(),2)
+                round_resta = round ((redondeo_volumen_actual + resto),2)
+                self.game.sonido.set_volume(round_resta)
+                self.iterador = self.iterador+1
+
+            self.game.pantalla.blit(self.volumen[self.iterador],(390,110))  
+
+            # # Mute: 0.00 Nivel 1: 0.04 nivel 2: 0.08  max: 0.12 
+
+            #x = round(5.76543,2)
+            #    print(x)
+
 
             self.draw_cursor()
             self.blit_screen()

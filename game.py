@@ -62,11 +62,15 @@ class Game():
         self.coli= False
         self.explosion = 0
         self.sonido= pygame.mixer.Sound("Sonidos/juego_prueba.wav")
+        self.sonido.set_volume(0.08) #Estado inicial de volumen
         
         
         
         
+        
+     
     pygame.init()
+    #sonido.set_volume(0.08)    # Mute: 0.00 Nivel 1: 0.04 nivel 2: 0.08  max: 0.1   
     ANCHO,LARGO=1280,720
     pantalla = pygame.Surface((ANCHO,LARGO))
     ventana=pygame.display.set_mode((ANCHO,LARGO))
@@ -83,9 +87,7 @@ class Game():
             # pygame.mixer.music.load('Sonidos/juego.mp3')
             # # pygame.mixer.music.play(1)
             self.sonido.play()
-            self.sonido.set_volume(0.08)    #Nivel 1: 0.04 nivel 2: 0.08  max: 0.1
-            
-            
+    
 
         while self.jugando and self.mapas.mostrar_menu==False:
             
@@ -355,7 +357,7 @@ class Game():
        
        
        self.update_score(self.puntos)
-       #print(self.score)
+      
        
        if self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501: # and self.py>499 and self.py<1000
             self.mute()
@@ -389,7 +391,6 @@ class Game():
 
                 while self.explosion<3:    
                     self.ventana.blit(self.explotando[self.explosion], (int(self.px-5), int(self.py))) 
-                    print(self.explosion)
                     self.explosion += 1    
                     pygame.time.wait(40)  
                     pygame.display.update()
