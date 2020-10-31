@@ -63,6 +63,7 @@ class Game():
         self.explosion = 0
         self.sonido= pygame.mixer.Sound("Sonidos/juego_prueba.wav")
         self.sonido.set_volume(0.08) #Estado inicial de volumen
+        self.V_sonido = 0 
         
         
         
@@ -74,7 +75,7 @@ class Game():
     ANCHO,LARGO=1280,720
     pantalla = pygame.Surface((ANCHO,LARGO))
     ventana=pygame.display.set_mode((ANCHO,LARGO))
-
+    
     # tuve que cambiarlo del init porque sino, no me toma el sprite de la moto .convert_alpha()
     
 
@@ -86,7 +87,10 @@ class Game():
             # pygame.mixer.music.set_volume(0.04)
             # pygame.mixer.music.load('Sonidos/juego.mp3')
             # # pygame.mixer.music.play(1)
-            self.sonido.play()
+            
+            if(self.V_sonido==0):   #Reproduce la musica del juego, solo la primera vez que entre en el bucle principal del juego. 
+                self.sonido.play()
+                self.V_sonido = 1 
     
 
         while self.jugando and self.mapas.mostrar_menu==False:
@@ -97,9 +101,11 @@ class Game():
                 self.menu_actual=self.pausaMenu
                 self.esMenu="Continuar" #esto es para el menu de opciones y creditos para que muestre continuar
             elif self.P_KEY:    # si apretamos la "p" muestra el carter de pausa
-                self.mute() #muteamos la cancion 
+                self.sonido.stop()
+                # self.mute() #muteamos la cancion 
                 self.pausar()  #mostramos mensaje de pausa
-                self.unmute()  #volvemos a escuchar la cancion
+                # self.unmute()  #volvemos a escuchar la cancion
+                self.sonido.play()
             
 
                 
@@ -303,27 +309,12 @@ class Game():
         #-----------------------------FinPiso-------------------------------------------
 
     def obstaculo (self):
-        if self.cambiarObstaculo==1:
-            vobstaculo=[pygame.image.load('Imagenes/Sierras1.png'),
-                        pygame.image.load('Imagenes/Sierras2.png'),
-                        pygame.image.load('Imagenes/Sierras3.png'),
-                        pygame.image.load('Imagenes/Sierras4.png')
-                        ] 
+        
+            vobstaculo= self.mapas.obstaculo  # Depende el mapa elejido, cargamos el obstaculo correspondiente.     
 
-            if self.iteradorObstaculo + 1 >= 4: #Este iterador recorre las 4 imagenes de la sierra
-                self.iteradorObstaculo = 0 
-                
-            self.xobstaculo = self.xobstaculo - self.resta  
-            self.ventana.blit(vobstaculo[self.iteradorObstaculo // 1], (int(self.xobstaculo), int(self.yobstaculo)))
-            self.iteradorObstaculo += 1
+            if self.mapas.state == 'Mapa 2':
+                self.yobstaculo =  560
 
-            if self.xobstaculo <= -200 : 
-                self.xobstaculo = 1280
-                self.resta +=0.5
-
-
-        else:
-            vobstaculo= pygame.image.load("Imagenes/Pincho.png") #Agregamos la imagen del obstaculo
 
             if self.xobstaculo >= -100:    #Un if desplaza el obstaculo hacia la izquierda y cuando llega al final, lo devuelve al principio.
                 
@@ -357,9 +348,9 @@ class Game():
        
        
        self.update_score(self.puntos)
-      
        
-       if self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501: # and self.py>499 and self.py<1000
+       
+       if (self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501 and self.mapas.state == 'Mapa 1') or (self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501 and self.mapas.state == 'Mapa 2'): # and self.py>499 and self.py<1000
             self.mute()
             self.sonido.stop() #Cuando colisiona pausamos la musica del juego.
             game_over = pygame.mixer.Sound("Sonidos/GameOver.wav")
@@ -374,6 +365,7 @@ class Game():
                         sys.exit()
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_p:
+                            game_over.stop()
                             self.perder=False
                             self.reiniciar_juego()
                             

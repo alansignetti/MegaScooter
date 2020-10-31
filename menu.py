@@ -343,9 +343,6 @@ class ControlesMenu(OptionsMenu):
             t_flechas = pygame.image.load("Imagenes/flechas_navegacion.png")
             self.game.pantalla.blit(t_flechas,(442,410))
             self.game.draw_text('Flechas de navegacion', 19,700, 440)
-
-
-
             self.draw_cursor()
             self.blit_screen()
 
@@ -358,8 +355,7 @@ class MapasMenu(Menu):
         self.seleccionarx,self.seleccionary=self.mitad_ancho, self.mitad_alto + 120
         self.atrasx,self.atrasy=self.mitad_ancho, self.mitad_alto + 140
         self.cursor_rect.midtop = (self.seleccionarx+ self.offset, self.seleccionary)  #dibujamos el cursor de la izquierda
-        self.cursor_rectDer.midtop = (self.seleccionarx + self.offder, self.seleccionary)   #dibujamos el cursor de la derecha
-
+        self.cursor_rectDer.midtop = (self.seleccionarx + self.offder, self.seleccionary)   #dibujamos el cursor de la derecha  
         self.mostrar_menu=True
         self.fondo_previo=pygame.image.load("Imagenes/City3.jpg").convert()
         self.mapa=pygame.image.load("Imagenes/City3.jpg").convert()
@@ -410,9 +406,10 @@ class MapasMenu(Menu):
     def eleccion(self):
         if self.state == 'Mapa 1':
             self.mapa=pygame.image.load("Imagenes/City3.jpg")
+            self.obstaculo = pygame.image.load("Imagenes/Pincho.png")
         elif self.state == 'Mapa 2':
             self.mapa=pygame.image.load("Imagenes/City2.jpg")
-
+            self.obstaculo = pygame.image.load("Imagenes/barril.png")
 
 
             
