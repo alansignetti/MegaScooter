@@ -26,6 +26,7 @@ class Game():
         self.pausaMenu = PausaMenu(self)
         self.mapas = MapasMenu(self)
         self.volumen = VolumenMenu(self) # Agregar la pantalla del menu
+        self.cartelExit = CartelExit(self)
         self.menu_actual = self.main_menu
         self.titulo=pygame.display.set_caption("MegaScooter")
         self.xPiso=0       
@@ -61,9 +62,11 @@ class Game():
         self.controles=ControlesMenu(self)
         self.coli= False
         self.explosion = 0
-        self.sonido= pygame.mixer.Sound("Sonidos/juego_prueba.wav")
+        self.sonido= pygame.mixer.Sound("Sonidos/juego.wav") #self.mapas.musica_mapa[0] #pygame.mixer.Sound("Sonidos/juego.wav")
         self.sonido.set_volume(0.08) #Estado inicial de volumen
         self.V_sonido = 0 
+        self.sonido_mapa = 1
+                
         
         
         
@@ -149,6 +152,7 @@ class Game():
             self.puntuacion()
             self.colisiones()
             
+            
             #self.ventana.blit(self.Marcador,(self.xobstaculo,self.yobstaculo))
             
 
@@ -217,6 +221,7 @@ class Game():
             
 
     
+    
     def comprobar_evento(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -269,7 +274,7 @@ class Game():
         # if self.esMenu=="Iniciar": #si empieza a jugar, entonces puedo cambiar el mapa
         #     self.mapas.eleccion()
 
-        self.mapas.eleccion()
+        #self.mapas.eleccion()
         
         fondo=self.mapas.mapa #cargamos el mapa default
         x_rel_Fondo= self.xFondo % fondo.get_rect().width  # Hacemos el valor de "x" dividido "%" el ancho del fondo "fondo.get_rect().width"
@@ -350,7 +355,7 @@ class Game():
        self.update_score(self.puntos)
        
        
-       if (self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501 and self.mapas.state == 'Mapa 1') or (self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501 and self.mapas.state == 'Mapa 2'): # and self.py>499 and self.py<1000
+       if (self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501): # or (self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501 and self.mapas.state == 'Mapa 2'): # and self.py>499 and self.py<1000
             self.mute()
             self.sonido.stop() #Cuando colisiona pausamos la musica del juego.
             game_over = pygame.mixer.Sound("Sonidos/GameOver.wav")

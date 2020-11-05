@@ -114,11 +114,23 @@ class MainMenu(Menu):
             elif self.state == 'Credits':   #sino preguntamos si el estado es credits
                 self.game.menu_actual = self.game.credits #ingresamos al menu de creditos
             elif self.state == 'Salir':
-                self.game.menu_actual = self.game.salir
+                self.game.menu_actual = self.game.cartelExit
+                #self.game.menu_actual = self.game.salir
             elif self.state == 'Mapas':
                 self.game.menu_actual = self.game.mapas
             self.correr_pantalla = False
             
+    # Hacer cartel 
+    #if self.opcion == 'Atras': # sino, volvemos al menu principal
+                #self.game.menu_actual = self.game.main_menu
+    #self.game.menu_actual = self.game.salir #Salir definitivo del juego
+
+
+
+
+
+
+
 
 class OptionsMenu(Menu):
     def __init__(self, game):
@@ -283,10 +295,8 @@ class VolumenMenu(OptionsMenu):
 
             self.game.pantalla.blit(self.volumen[self.iterador],(390,110))  
 
-            # # Mute: 0.00 Nivel 1: 0.04 nivel 2: 0.08  max: 0.12 
+            # Mute: 0.00 Nivel 1: 0.04 nivel 2: 0.08  max: 0.12 
 
-            #x = round(5.76543,2)
-            #    print(x)
 
 
             self.draw_cursor()
@@ -297,8 +307,8 @@ class VolumenMenu(OptionsMenu):
 class ControlesMenu(OptionsMenu):
     def __init__(self, game):
         OptionsMenu.__init__(self,game)
-        self.cursor_rect.midtop = (self.game.ANCHO / 2 + self.offset, self.game.LARGO / 2 + 150)  #dibujamos el cursor de la izquierda
-        self.cursor_rectDer.midtop = (self.game.ANCHO / 2 + self.offder, self.game.LARGO / 2 + 150)   #dibujamos el cursor de la derecha
+        self.cursor_rect.midtop = (self.game.ANCHO / 2 + self.offset, self.game.LARGO / 2 + 200)  #dibujamos el cursor de la izquierda
+        self.cursor_rectDer.midtop = (self.game.ANCHO / 2 + self.offder, self.game.LARGO / 2 + 200)   #dibujamos el cursor de la derecha
 
 
     def display_menu(self):
@@ -313,7 +323,7 @@ class ControlesMenu(OptionsMenu):
                 self.correr_pantalla = False    # seteamos la variable para salir del bucle
             self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
             self.game.draw_text('Controles', 20, self.game.ANCHO / 2, 67)  #mostramos el titulo del menu
-            self.game.draw_text('ATRAS', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 150) 
+            self.game.draw_text('ATRAS', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 200) 
 
             # Cargamos las imagenes de los controles y describimos sus funciones
 
@@ -343,6 +353,12 @@ class ControlesMenu(OptionsMenu):
             t_flechas = pygame.image.load("Imagenes/flechas_navegacion.png")
             self.game.pantalla.blit(t_flechas,(442,410))
             self.game.draw_text('Flechas de navegacion', 19,700, 440)
+
+            #Configuracion de las flechas de subir y bajar volumen
+            t_volumen = pygame.image.load("Imagenes/T_volumen.png")
+            self.game.pantalla.blit(t_volumen,(380,480))
+            self.game.draw_text('Bajar / Subir Volumen', 19,700, 495)    
+
             self.draw_cursor()
             self.blit_screen()
 
@@ -359,6 +375,10 @@ class MapasMenu(Menu):
         self.mostrar_menu=True
         self.fondo_previo=pygame.image.load("Imagenes/City3.jpg").convert()
         self.mapa=pygame.image.load("Imagenes/City3.jpg").convert()
+        self.game= game
+        self.sonido_mapa = 1
+       
+        
         
     def display_menu(self):
         self.correr_pantalla = True
@@ -380,6 +400,8 @@ class MapasMenu(Menu):
         
         if self.game.START_KEY:  # si le damos a enter volvemos al menu principal
             if self.opcion == 'Seleccionar': #preguntamos si apretamos enter y seleccionamos el mapa entonces vamos al juego
+                self.eleccion()
+                self.comprobar_sonido() # Carga el sonido de acuerdo al mapa seleccionado
                 self.mostrar_menu = False
             if self.opcion == 'Atras': # sino, volvemos al menu principal
                 self.game.menu_actual = self.game.main_menu
@@ -407,13 +429,80 @@ class MapasMenu(Menu):
         if self.state == 'Mapa 1':
             self.mapa=pygame.image.load("Imagenes/City3.jpg")
             self.obstaculo = pygame.image.load("Imagenes/Pincho.png")
+            #self.game.sonido = self.musica_mapa[0] 
+            
         elif self.state == 'Mapa 2':
             self.mapa=pygame.image.load("Imagenes/City2.jpg")
             self.obstaculo = pygame.image.load("Imagenes/barril.png")
+            # = self.musica_mapa[1]
+            
+
+    def comprobar_sonido (self): 
+        # Carga el sonido de acuerdo al mapa seleccionado por el jugador.
+        
+        if(self.state == 'Mapa 1' and self.sonido_mapa == 2 ):
+            
+            self.game.sonido = pygame.mixer.Sound("Sonidos/juego.wav")
+            self.game.sonido.set_volume(0.08)
+            self.sonido_mapa = 1
+        elif (self.state == 'Mapa 2' and self.sonido_mapa == 1 ):
+            
+            self.game.sonido = pygame.mixer.Sound("Sonidos/Mapa_2.wav")
+            self.game.sonido.set_volume(0.08)
+            self.sonido_mapa = 2
 
 
-            
-            
+class CartelExit(Menu):
+    def __init__(self, game):
+        Menu.__init__(self, game)
+        self.opcion= "Si"
+        self.six,self.siy=self.mitad_ancho, self.mitad_alto + 70
+        self.nox,self.noy=self.mitad_ancho, self.mitad_alto + 90
+        self.cursor_rect.midtop = (self.six+ self.offset, self.siy)  #dibujamos el cursor de la izquierda
+        self.cursor_rectDer.midtop = (self.six + self.offder, self.siy)   #dibujamos el cursor de la derecha  
+        self.game= game
+        
+       
+        
+        
+    def display_menu(self):
+        self.correr_pantalla = True
+        
+        while self.correr_pantalla: #esperamos si se presiona el enter o borrar seteamos el corre_pantalla
+            self.game.comprobar_evento()
+            self.check_input()
+            #self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
+            pygame.draw.rect(self.game.pantalla,self.game.Rojo, pygame.Rect((480,320, 320, 150)),0) #Dibujamos el rectangulo de fondo
+            #self.game.draw_text('Salir', 20, self.game.ANCHO / 2, 67)  #mostramos el titulo del menu
+            self.game.draw_text('Estas seguro que', 20, self.game.ANCHO / 2, 340)
+            self.game.draw_text('deseas salir', 20, self.game.ANCHO / 2, 370)
+            self.game.draw_text('Si', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 70) 
+            self.game.draw_text('ni Loco', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 90) 
+            self.draw_cursor()
+            self.blit_screen()
+            pygame.display.update()
+
+    def check_input(self): 
+        
+        if self.game.START_KEY:  # si le damos a enter volvemos al menu principal
+            if self.opcion == 'Si': #Si la opcion es "Si" salimos definitivamente del juego.
+                self.game.menu_actual = self.game.salir
+            if self.opcion == 'Ni Loco': # sino, volvemos al menu principal
+                self.game.menu_actual = self.game.main_menu
+            self.correr_pantalla = False    # seteamos la variable para salir del bucle
+
+        elif self.game.UP_KEY or self.game.DOWN_KEY:
+            if self.opcion == 'Si':
+                self.opcion = 'Ni Loco'
+                self.cursor_rect.midtop = (self.nox + self.offset, self.noy)
+                self.cursor_rectDer.midtop = (self.nox + self.offder, self.noy)
+            elif self.opcion == 'Ni Loco':
+                self.opcion = 'Si'
+                self.cursor_rect.midtop = (self.six + self.offset, self.siy)
+                self.cursor_rectDer.midtop = (self.six + self.offder, self.siy)
+        
+        
+
             
 # class PausaMenu(Menu):
 #     def __init__(self, game):
