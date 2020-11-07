@@ -298,7 +298,7 @@ class Game():
         if self.velocidad_a == True:
             self.numeroVelocidad += 0.05/50
 
-        piso = pygame.image.load("Imagenes/piso22.jpg").convert()   #cargamos la imagen en variable piso
+        piso = self.mapas.piso   #cargamos la imagen en variable piso
 
         #pincho= pygame.image.load("Imagenes/Pincho.png") #Agregamos la imagen del obstaculo
 
@@ -332,13 +332,6 @@ class Game():
 
     def recorte_imagen (self,a,b,c,d,imagen,e):
 
-
-        # self.Moto_sprite.set_clip(pygame.Rect(a,b,c,d))  
-        # Moto_1 = self.Moto_sprite.subsurface(self.Moto_sprite.get_clip())
-        # Ancho_moto = Moto_1.get_size()
-        # MotoBig = pygame.transform.scale(Moto_1,(int(Ancho_moto[0]*2),(Ancho_moto[1]*2)))
-        # return MotoBig
-    
         imagen.set_clip(pygame.Rect(a,b,c,d))  
         MotoBig = imagen.subsurface(imagen.get_clip())
         
