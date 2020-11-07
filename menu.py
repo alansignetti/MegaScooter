@@ -11,6 +11,7 @@ class Menu():
         self.cursor_rectDer = pygame.Rect(0, 0, 20, 20)
         self.offset = -130 #aca es un atributo fijo,lo llamamos cuando dibujamos el asterisco para que este -100 pixeles del texto del menu
         self.offder = 150
+        self.fondo_inicial=pygame.image.load("Imagenes/FondoInicial.jpg").convert()
         
     def draw_cursor(self):
         self.game.draw_text('*', 15, self.cursor_rect.x, self.cursor_rect.y)
@@ -52,8 +53,8 @@ class MainMenu(Menu):
         while self.correr_pantalla:
             self.game.comprobar_evento()    #comprobamos si se presiono una tecla o la x de la ventana para salir
             self.check_input()
-            self.game.pantalla.fill(self.game.Negro)
-            self.game.draw_text('Menu principal', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 20)
+            self.game.pantalla.blit(self.fondo_inicial, (0, 0)) #mostramos la imagen del fondo de menu
+            self.game.draw_text('Menu principal', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 150)
             self.game.draw_text(self.partida, 20, self.startx, self.starty)
             self.game.draw_text("Record Actual " + str(self.numero), 25, self.recordx, self.recordy) #Mostramos el record actual.
             self.game.draw_text("Opciones", 20, self.opcionesx, self.opcionesy)
@@ -148,8 +149,8 @@ class OptionsMenu(Menu):
         while self.correr_pantalla:
             self.game.comprobar_evento()
             self.check_input()
-            self.game.pantalla.fill((0, 0, 0))
-            self.game.draw_text('Opciones', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 30)
+            self.game.pantalla.blit(self.fondo_inicial, (0, 0)) #mostramos la imagen del fondo de menu
+            self.game.draw_text('Opciones', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 150)
             self.game.draw_text("Volumen", 15, self.volx, self.voly)
             self.game.draw_text("Controles", 15, self.controlsx, self.controlsy)
             self.game.draw_text("ATRAS", 15, self.game.ANCHO / 2, self.controlsy + 20) 
@@ -217,8 +218,8 @@ class CreditsMenu(Menu):
                 elif self.game.esMenu=="Continuar":
                     self.game.menu_actual = self.game.pausaMenu   # volvemos al menu principal
                 self.correr_pantalla = False    # seteamos la variable para salir del bucle
-            self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
-            self.game.draw_text('Creditos', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 20)  #mostramos el titulo del menu
+            self.game.pantalla.blit(self.fondo_inicial, (0, 0)) #mostramos la imagen del fondo de menu
+            self.game.draw_text('Creditos', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 150)  #mostramos el titulo del menu
             self.game.draw_text('Alan Signetti', 15, self.game.ANCHO / 2 -4, self.game.LARGO / 2 + 10) #mostramos la persona
             self.game.draw_text('Cristian Scarella', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 30) #mostramos la persona 
             self.game.draw_text('Yago Rexach', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 50) #mostramos la persona
@@ -269,7 +270,7 @@ class VolumenMenu(OptionsMenu):
         while self.correr_pantalla: #esperamos si se presiona el enter o borrar seteamos el corre_pantalla
             
 
-            self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
+            self.game.pantalla.blit(self.fondo_inicial, (0, 0))
             self.game.draw_text('Volumen', 20, self.game.ANCHO / 2, 67)  #mostramos el titulo del menu
             self.game.draw_text('ATRAS', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 150) 
             
@@ -321,7 +322,7 @@ class ControlesMenu(OptionsMenu):
             #     elif self.game.esMenu=="Continuar":
             #         self.game.menu_actual = self.game.pausaMenu """   # volvemos al menu principal
                 self.correr_pantalla = False    # seteamos la variable para salir del bucle
-            self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
+            self.game.pantalla.blit(self.fondo_inicial, (0, 0)) #mostramos la imagen del fondo de menu
             self.game.draw_text('Controles', 20, self.game.ANCHO / 2, 67)  #mostramos el titulo del menu
             self.game.draw_text('ATRAS', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 200) 
 
@@ -387,12 +388,12 @@ class MapasMenu(Menu):
         while self.correr_pantalla: #esperamos si se presiona el enter o borrar seteamos el corre_pantalla
             self.game.comprobar_evento()
             self.check_input()
-            self.game.pantalla.fill(self.game.Negro)   # Establecemos de color negro la pantalla
+            self.game.pantalla.blit(self.fondo_inicial, (0, 0)) #mostramos la imagen del fondo de menu
             self.game.draw_text('Mapas', 20, self.game.ANCHO / 2, 67)  #mostramos el titulo del menu
             self.game.draw_text('Seleccionar', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 120) 
             self.game.draw_text('Atras', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 140) 
             self.fondo_previo=pygame.transform.scale(self.fondo_previo,(325,200)) #Achica la imagen del mapa
-            self.game.pantalla.blit(self.fondo_previo,(500,200))
+            self.game.pantalla.blit(self.fondo_previo,(500,200)) #mostramos los mapas para la eleccion
             self.draw_cursor()
             self.blit_screen()
             
@@ -490,16 +491,16 @@ class CartelExit(Menu):
         if self.game.START_KEY:  # si le damos a enter volvemos al menu principal
             if self.opcion == 'Si': #Si la opcion es "Si" salimos definitivamente del juego.
                 self.game.menu_actual = self.game.salir
-            if self.opcion == 'Ni Loco': # sino, volvemos al menu principal
+            if self.opcion == 'No': # sino, volvemos al menu principal
                 self.game.menu_actual = self.game.main_menu
             self.correr_pantalla = False    # seteamos la variable para salir del bucle
 
         elif self.game.UP_KEY or self.game.DOWN_KEY:
             if self.opcion == 'Si':
-                self.opcion = 'Ni Loco'
+                self.opcion = 'No'
                 self.cursor_rect.midtop = (self.nox + self.offset, self.noy)
                 self.cursor_rectDer.midtop = (self.nox + self.offder, self.noy)
-            elif self.opcion == 'Ni Loco':
+            elif self.opcion == 'No':
                 self.opcion = 'Si'
                 self.cursor_rect.midtop = (self.six + self.offset, self.siy)
                 self.cursor_rectDer.midtop = (self.six + self.offder, self.siy)
