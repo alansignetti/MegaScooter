@@ -18,8 +18,8 @@ class Menu():
         self.game.draw_text('*', 15, self.cursor_rectDer.x, self.cursor_rectDer.y)
 
     def blit_screen(self):
-        self.game.ventana.blit(self.game.pantalla, (0, 0))  #mostramos el menu, dibuja una imagen sobre la otra
-        pygame.display.update() #actualizamos
+        self.game.ventana.blit(self.game.pantalla, (0, 0)) 
+        pygame.display.update() #actualizamos la pantalla
         self.game.reiniciar_tecla() #reiniciamos las teclas a False para que el cursor no se mueva solo
 
 class MainMenu(Menu):
@@ -35,8 +35,10 @@ class MainMenu(Menu):
         self.cursor_rectDer.midtop = (self.startx + self.offder,self.starty) #dibujamos el asterisco de la izquierda
         self.partida="Iniciar Partida"
         self.numero =0
+
     def display_menu(self):
         self.correr_pantalla = True
+
         pygame.mixer.music.load('Sonidos/pokemon.mp3')
         pygame.mixer.music.set_volume(0.01)
         pygame.mixer.music.play(1)
@@ -52,7 +54,7 @@ class MainMenu(Menu):
 
         while self.correr_pantalla:
             self.game.comprobar_evento()    #comprobamos si se presiono una tecla o la x de la ventana para salir
-            self.check_input()
+            self.check_input()              # Chequeamos en que opcion estas parado
             self.game.pantalla.blit(self.fondo_inicial, (0, 0)) #mostramos la imagen del fondo de menu
             self.game.draw_text('Menu principal', 20, self.game.ANCHO / 2, self.game.LARGO / 2 - 150)
             self.game.draw_text(self.partida, 20, self.startx, self.starty)
@@ -115,11 +117,9 @@ class MainMenu(Menu):
             elif self.state == 'Credits':   #sino preguntamos si el estado es credits
                 self.game.menu_actual = self.game.credits #ingresamos al menu de creditos
             elif self.state == 'Salir':
-                self.game.menu_actual = self.game.cartelExit
-                #self.game.menu_actual = self.game.salir
-            elif self.state == 'Mapas':
-                self.game.menu_actual = self.game.mapas
-            self.correr_pantalla = False
+                self.game.menu_actual = self.game.cartelExit  
+
+            self.correr_pantalla = False   #Despues que elejis la opcion que queres, cortas la pantalla.
             
     # Hacer cartel 
     #if self.opcion == 'Atras': # sino, volvemos al menu principal
@@ -251,6 +251,8 @@ class VolumenMenu(OptionsMenu):
         self.V_2 = pygame.image.load("Imagenes/vol_2_transparente.png")
         self.V_1 = pygame.image.load("Imagenes/vol_1_transparente.png")
         self.V_mute = pygame.image.load("Imagenes/vol_mute.png")
+        self.game=game
+        self.iterador=2
 
         self.volumen = [
                 self.V_mute,
@@ -259,13 +261,15 @@ class VolumenMenu(OptionsMenu):
                 self.V_max
                     ]
 
-        self.iterador=2
+        
 
     def display_menu(self):
         self.correr_pantalla = True
         resto = 0.04
 
+
         self.game.pantalla.blit(self.volumen[self.iterador],(390,110))  #Imagen por defecto
+        
 
         while self.correr_pantalla: #esperamos si se presiona el enter o borrar seteamos el corre_pantalla
             
@@ -379,10 +383,12 @@ class MapasMenu(Menu):
         self.game= game
         self.sonido_mapa = 1
         self.piso = pygame.image.load("Imagenes/Piso_Mapa_2.jpg").convert()
-       
+        self.sn_mapa = 0
+        
+    
         
         
-    def display_menu(self):
+    def display_menu(self): #Es lo que aparece en pantalla 
         self.correr_pantalla = True
         
         while self.correr_pantalla: #esperamos si se presiona el enter o borrar seteamos el corre_pantalla
@@ -394,19 +400,21 @@ class MapasMenu(Menu):
             self.game.draw_text('Atras', 15, self.game.ANCHO / 2, self.game.LARGO / 2 + 140) 
             self.fondo_previo=pygame.transform.scale(self.fondo_previo,(325,200)) #Achica la imagen del mapa
             self.game.pantalla.blit(self.fondo_previo,(500,200)) #mostramos los mapas para la eleccion
-            self.draw_cursor()
-            self.blit_screen()
+            self.draw_cursor()  #Dibuja los astericos de cada opcion
+
+            self.blit_screen()    #Actualizamos la pantalla y reiniciamos las teclas.
             
 
     def check_input(self): 
         
-        if self.game.START_KEY:  # si le damos a enter volvemos al menu principal
+        if self.game.START_KEY:  # si le damos a enter 
             if self.opcion == 'Seleccionar': #preguntamos si apretamos enter y seleccionamos el mapa entonces vamos al juego
-                self.eleccion()
+                self.eleccion() # De acuerdo al mapa seleccionado, carga la imagen del fondo, obstaculo y piso.
                 self.comprobar_sonido() # Carga el sonido de acuerdo al mapa seleccionado
-                self.mostrar_menu = False
+                self.mostrar_menu = False   #Cierra el menu de eleccion de mapa e inicie el juego. 
+
             if self.opcion == 'Atras': # sino, volvemos al menu principal
-                self.game.menu_actual = self.game.main_menu
+                self.game.menu_actual = self.game.main_menu   #Volvemos al menu principal
             self.correr_pantalla = False    # seteamos la variable para salir del bucle
 
         elif self.game.UP_KEY or self.game.DOWN_KEY:
@@ -431,28 +439,30 @@ class MapasMenu(Menu):
         if self.state == 'Mapa 1':
             self.mapa=pygame.image.load("Imagenes/City3.jpg")
             self.obstaculo = pygame.image.load("Imagenes/Pincho.png")
-            #self.game.sonido = self.musica_mapa[0] 
             self.piso = pygame.image.load("Imagenes/piso22.jpg").convert()
-            
+    
+    
             
         elif self.state == 'Mapa 2':
             self.mapa=pygame.image.load("Imagenes/City2.jpg")
             self.obstaculo = pygame.image.load("Imagenes/barril.png")
-            # = self.musica_mapa[1]
             self.piso = pygame.image.load("Imagenes/Piso_Mapa_2.jpg").convert()
 
     def comprobar_sonido (self): 
         # Carga el sonido de acuerdo al mapa seleccionado por el jugador.
         
+        
+
         if(self.state == 'Mapa 1' and self.sonido_mapa == 2 ):
-            
+            sonido_anterior=self.game.sonido.get_volume()
             self.game.sonido = pygame.mixer.Sound("Sonidos/juego.wav")
-            self.game.sonido.set_volume(0.08)
+            self.game.sonido.set_volume(sonido_anterior) 
             self.sonido_mapa = 1
+
         elif (self.state == 'Mapa 2' and self.sonido_mapa == 1 ):
-            
+            sonido_anterior=self.game.sonido.get_volume()
             self.game.sonido = pygame.mixer.Sound("Sonidos/Mapa_2.wav")
-            self.game.sonido.set_volume(0.08)
+            self.game.sonido.set_volume(sonido_anterior)
             self.sonido_mapa = 2
 
 

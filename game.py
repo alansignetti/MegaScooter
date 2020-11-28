@@ -8,7 +8,7 @@ import os
 class Game():
     def __init__(self):
         #pygame.init()
-        self.reiniciar_juego()
+        self.reiniciar_juego()  
         
         
     def reiniciar_juego(self):
@@ -63,10 +63,10 @@ class Game():
         self.coli= False
         self.explosion = 0
         self.sonido= pygame.mixer.Sound("Sonidos/juego.wav") #self.mapas.musica_mapa[0] #pygame.mixer.Sound("Sonidos/juego.wav")
-        self.sonido.set_volume(0.08) #Estado inicial de volumen
+        self.sonido.set_volume(0.08) #Estado inicial de volumen 
         self.V_sonido = 0 
         self.sonido_mapa = 1
-                
+        
         
         
         
@@ -78,6 +78,9 @@ class Game():
     ANCHO,LARGO=1280,720
     pantalla = pygame.Surface((ANCHO,LARGO))
     ventana=pygame.display.set_mode((ANCHO,LARGO))
+
+        
+    
     
     # tuve que cambiarlo del init porque sino, no me toma el sprite de la moto .convert_alpha()
     
@@ -85,7 +88,8 @@ class Game():
     #Videos para hacer el fondo y el piso movil https://www.youtube.com/watch?v=Ftln3VrFV6s&list=PLVzwufPir356RMxSsOccc38jmxfxqfBdp&index=4   
 
     def loop_juego(self):
-        if(self.jugando and self.mapas.mostrar_menu == False):
+
+        if(self.jugando and self.mapas.mostrar_menu == False):   
             self.mute()
             # pygame.mixer.music.set_volume(0.04)
             # pygame.mixer.music.load('Sonidos/juego.mp3')
@@ -93,21 +97,25 @@ class Game():
             
             if(self.V_sonido==0):   #Reproduce la musica del juego, solo la primera vez que entre en el bucle principal del juego. 
                 self.sonido.play()
-                self.V_sonido = 1 
-    
+                self.V_sonido = 1
+            
+        
+            #print(self.sonido.get_volume())
+
+           
+
+        
 
         while self.jugando and self.mapas.mostrar_menu==False:
             
-            self.comprobar_evento()
-            if self.ESCAPE_KEY:  #si apretamos enter el juego vuelve al menu
+            self.comprobar_evento()  #De acuerdo a la tecla apreta, la pone en true.
+            if self.ESCAPE_KEY:  #si apretamos la tecla escape, vamos al menu de pausa. 
                 self.jugando= False
                 self.menu_actual=self.pausaMenu
                 self.esMenu="Continuar" #esto es para el menu de opciones y creditos para que muestre continuar
             elif self.P_KEY:    # si apretamos la "p" muestra el carter de pausa
                 self.sonido.stop()
-                # self.mute() #muteamos la cancion 
                 self.pausar()  #mostramos mensaje de pausa
-                # self.unmute()  #volvemos a escuchar la cancion
                 self.sonido.play()
             
 
@@ -120,7 +128,7 @@ class Game():
 
             #Personaje quieto 
             if self.acelera != True : # Cuando toque un obstaculo ponemos acelera en false.
-                self.acelera = False
+                #self.acelera = False
                 self.cuentaPasos = 0
                 
             
@@ -133,9 +141,9 @@ class Game():
                     sonido_salto.set_volume(0.05)
                     self.cuentaPasos = 0
             else:
-                if self.cuentaSalto >= -10:
+                if self.cuentaSalto >= -10: #Le bajas la coordenada, para que suba.
                     self.py -= (self.cuentaSalto * abs(self.cuentaSalto)) * 0.2
-                    self.cuentaSalto -= 1
+                    self.cuentaSalto -= 1  #Resta los pixeles, para que vaya cayendo de apoco la moto.
                    
                 else:
                     self.cuentaSalto = 10
@@ -158,27 +166,20 @@ class Game():
 
 
             self.contadorVelocidad +=1
-            self.contadorObstaculo +=1
+            
             #hace que cada vez se mueva mas rapido, aumentando la dificultad
-            if self.contadorVelocidad == 100: #estaba en 200, que cambia??  -- Es la cantidad de vueltas que tiene que hacer el bucle, para aumentar en 0,01 la velocidad del piso. 
+            if self.contadorVelocidad == 100: #-- Es la cantidad de vueltas que tiene que hacer el bucle, para aumentar la velocidad del piso. 
                 self.velocidad_a = True 
                 self.contadorVelocidad  = 0 
             
-            
-
-                #self.cambiarObstaculo= 1
-            if self.contadorObstaculo>400:
-                self.cambiarObstaculo= 0
-                self.contadorObstaculo=0
-
 
             #contador de puntos --cuanto mas alto sea el numero del multiplo mas lento suma los puntos
             if(self.contadorVelocidad%5==0):
                 self.puntos+=1
 
-            self.reiniciar_tecla()
+            self.reiniciar_tecla()  #Reinicie todas las teclas.
             pygame.display.update()
-            self.reloj.tick(self.FPS)
+            self.reloj.tick(self.FPS) 
 
 
 
@@ -276,14 +277,14 @@ class Game():
 
         #self.mapas.eleccion()
         
-        fondo=self.mapas.mapa #cargamos el mapa default
-        x_rel_Fondo= self.xFondo % fondo.get_rect().width  # Hacemos el valor de "x" dividido "%" el ancho del fondo "fondo.get_rect().width"
+        fondo=self.mapas.mapa #cargamos el mapa default, tomamos el ancho.
+        x_rel_Fondo= self.xFondo % fondo.get_rect().width  
         self.ventana.blit(fondo, (x_rel_Fondo - fondo.get_rect().width, 0))
 
         # Este if permite que el fondo se repita indefinidamente
         if(x_rel_Fondo<self.ANCHO):
             self.ventana.blit(fondo,(x_rel_Fondo,0))
-        self.xFondo-=8  #Cambias la velocidad del fondo.
+        self.xFondo-=8  #Cantidad de pixeles a los que se va a ir desplazando de 0 a 1280.
         #----------------------------Fin Fondo-------------------------------------------
 
 
@@ -296,11 +297,11 @@ class Game():
         
 
         if self.velocidad_a == True:
-            self.numeroVelocidad += 0.05/50
+            self.numeroVelocidad += 0.05/50  #Aumenta la velocidad del piso.
 
         piso = self.mapas.piso   #cargamos la imagen en variable piso
 
-        #pincho= pygame.image.load("Imagenes/Pincho.png") #Agregamos la imagen del obstaculo
+        
 
         x_rel_Piso= self.xPiso % piso.get_rect().width  #despues del % el comando obtiene el ancho
         #de la foto siendo el divisor de xPiso devuelve el resto
@@ -309,7 +310,7 @@ class Game():
         if(x_rel_Piso<self.ANCHO):
             self.ventana.blit(piso,(x_rel_Piso,altoPiso)) #Mostramos la imagen
             self.xPiso-=self.numeroVelocidad
-        # xPiso es la cantidad de pixeles por segundo
+        # xPiso es la cantidad de pixeles por segundo.
 
         #-----------------------------FinPiso-------------------------------------------
 
@@ -318,7 +319,7 @@ class Game():
             vobstaculo= self.mapas.obstaculo  # Depende el mapa elejido, cargamos el obstaculo correspondiente.     
 
             if self.mapas.state == 'Mapa 2':
-                self.yobstaculo =  560
+                self.yobstaculo =  560    #Subimos el obstaculo, para que quede a la altura del piso.
 
 
             if self.xobstaculo >= -100:    #Un if desplaza el obstaculo hacia la izquierda y cuando llega al final, lo devuelve al principio.
@@ -335,7 +336,7 @@ class Game():
         imagen.set_clip(pygame.Rect(a,b,c,d))  
         MotoBig = imagen.subsurface(imagen.get_clip())
         
-        if e==2: #Este es para que duplique el tamaño de la imagen, que se pasa
+        if e==2: #Este es para que duplique el tamaño de la imagen
             Ancho_moto = MotoBig.get_size()
             MotoBig = pygame.transform.scale(MotoBig,(int(Ancho_moto[0]*2),(Ancho_moto[1]*2)))
         return MotoBig
@@ -345,11 +346,11 @@ class Game():
     def colisiones (self):
        
        
-       self.update_score(self.puntos)
+       self.update_score(self.puntos)   #Toma los puntos y los reemplaza en el bloc de notas, si es su record maximo.
        
        
-       if (self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501): # or (self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501 and self.mapas.state == 'Mapa 2'): # and self.py>499 and self.py<1000
-            self.mute()
+       if (self.xobstaculo >3 and self.xobstaculo <180 and self.py>479 and self.py<501): 
+            
             self.sonido.stop() #Cuando colisiona pausamos la musica del juego.
             game_over = pygame.mixer.Sound("Sonidos/GameOver.wav")
             game_over.play()  
@@ -363,35 +364,31 @@ class Game():
                         sys.exit()
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_p:
-                            game_over.stop()
+                            game_over.stop()   #Para el sonido del gameover
                             self.perder=False
                             self.reiniciar_juego()
                             
                 # Vector para recorrer la imagen explosion
                 self.explotando= [
-                                self.recorte_imagen(215,35,135,125,self.Img_explosion,1),
+                                self.recorte_imagen(215,35,135,125,self.Img_explosion,1),   # Tiene el valor uno para que la explosion, se mantenga el tamaño original.
                                 self.recorte_imagen(392,15,185,158,self.Img_explosion,1),
-                                self.recorte_imagen(577,0,190,185,self.Img_explosion,1) # pygame.transform.scale(,(int(Ancho_moto[0]*2),(Ancho_moto[1]*2)))
+                                self.recorte_imagen(577,0,190,185,self.Img_explosion,1) 
                             
                     ]
 
                 ancho_explosion = self.explotando[2].get_size() 
-                self.explotando[2]=pygame.transform.scale(self.explotando[2],(int(ancho_explosion[0]*2-130),(ancho_explosion[1]*2-210)))  #Correcion de la ultima explocion        
+                self.explotando[2]=pygame.transform.scale(self.explotando[2],(int(ancho_explosion[0]*2-130),(ancho_explosion[1]*2-210)))  #Corregir el ancho de la ultima explosion.       
 
 
                 while self.explosion<3:    
                     self.ventana.blit(self.explotando[self.explosion], (int(self.px-5), int(self.py))) 
                     self.explosion += 1    
-                    pygame.time.wait(40)  
-                    pygame.display.update()
+                    pygame.time.wait(40)  #Tiempo de demora entre cada imagen.
+                    pygame.display.update() #Es para que se actualice y muestre todas las imagenes de la explosion. 
 
 
-                # Imagenes para la explosion
-                # img_explosion_recorte=self.recorte_imagen(215,35,135,125,self.Img_explosion,1)  #Coordenada x, corrdenada y, ancho y alto
-                # self.ventana.blit(img_explosion_recorte,(int(0), int(500)))
-                self.coli = True
                 
-
+        
 
                 fuentePerder=pygame.font.Font(self.fuente_Puntuacion,self.tam_fuente_puntos)
 
@@ -423,7 +420,7 @@ class Game():
 
 
 
-    def draw_text(self, text, size, x, y ):
+    def draw_text(self, text, size, x, y ):   #Determina la fuente y el color del menu principal. 
         font = pygame.font.Font(self.fuente_Puntuacion,size)
         text_surface = font.render(text, True, self.Blanco)
         text_rect = text_surface.get_rect()
@@ -431,13 +428,14 @@ class Game():
         self.pantalla.blit(text_surface,text_rect)
 
 
-    
+
+        
     
 
 
     def puntuacion(self):
         fuente_PuntuacionPar=pygame.font.Font(self.fuente_Puntuacion,self.tam_fuente_puntos)
-        texto_de_puntos=fuente_PuntuacionPar.render("Puntos "+str(self.puntos),True,self.Blanco)
+        texto_de_puntos=fuente_PuntuacionPar.render("Puntos "+str(self.puntos),True,self.Blanco)  #Muestra la palabra "Puntos", junto a la puntuacion actual del jugador. 
         self.ventana.blit(texto_de_puntos,(900,15))
 
 
@@ -454,7 +452,7 @@ class Game():
         #global Moto_sprite = pygame.image.load("Imagenes/Moto.png")
 
         self.acelerando = [
-                            self.recorte_imagen(0,115,106,62,self.Moto_sprite,2),
+                            self.recorte_imagen(0,115,106,62,self.Moto_sprite,2), #El valor 2 es para que duplique el tamaño de la imagen.  
                             self.recorte_imagen(106,115,105,57,self.Moto_sprite,2),
                             self.recorte_imagen(213,115,105,57,self.Moto_sprite,2),
                             self.recorte_imagen(318,115,105,57,self.Moto_sprite,2)  
